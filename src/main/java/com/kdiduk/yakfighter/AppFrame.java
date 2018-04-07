@@ -6,6 +6,7 @@ class AppFrame extends JFrame
 {
     public AppFrame()
     {
+        add(new PlayerImageComponent());
         setSize(640, 480);
     }
 }
