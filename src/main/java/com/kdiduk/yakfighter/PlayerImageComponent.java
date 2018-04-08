@@ -6,6 +6,8 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 class PlayerImageComponent extends JComponent
 {
+    private static final int    WINDOW_WIDTH = 800;
+    private static final int    WINDOW_HEIGHT = 600;
     private static final String IMAGE_PATH = "/images/yak-main.png";
     private Image mImage = null;
 
@@ -18,12 +20,12 @@ class PlayerImageComponent extends JComponent
 
     public void paintComponent(Graphics g)
     {
-        g.drawImage(mImage, 280, 200, null);
+        g.drawImage(mImage, 350, 250, null);
     }
 
     public Dimension getPreferredSize()
     {
-        return new Dimension(94, 80);
+        return new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 }
 
