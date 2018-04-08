@@ -4,14 +4,14 @@ import java.awt.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-class PlayerImageComponent extends JComponent
+class ViewComponent extends JComponent
 {
     private static final int    WINDOW_WIDTH = 800;
     private static final int    WINDOW_HEIGHT = 600;
     private static final String IMAGE_PATH = "/images/yak-main.png";
     private Image mImage = null;
 
-    public PlayerImageComponent()
+    public ViewComponent()
     {
         java.net.URL imgURL = getClass().getResource(IMAGE_PATH);
         ImageIcon imgIcon = new ImageIcon(imgURL);

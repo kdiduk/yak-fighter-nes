@@ -8,7 +8,7 @@ class AppFrame extends JFrame
 {
     public AppFrame()
     {
-        add(new PlayerImageComponent());
+        add(new ViewComponent());
         setResizable(false);
         pack();
 
