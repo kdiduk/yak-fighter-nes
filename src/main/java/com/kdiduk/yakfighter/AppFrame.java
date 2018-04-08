@@ -1,14 +1,14 @@
 package com.kdiduk.yakfighter;
 
-import java.awt.EventQueue;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-class AppFrame extends JFrame
+public class AppFrame extends JFrame
 {
-    public AppFrame()
+    public AppFrame(JComponent viewComponent)
     {
-        add(new ViewComponent());
+        add(viewComponent);
         setResizable(false);
         pack();
 
@@ -16,11 +16,4 @@ class AppFrame extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(() -> {
-            JFrame frame = new AppFrame();
-            frame.setVisible(true);
-        });
-    }
 }

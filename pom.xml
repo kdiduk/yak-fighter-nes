@@ -41,7 +41,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.kdiduk.yakfighter.AppFrame</mainClass>
+              <mainClass>com.kdiduk.yakfighter.Game</mainClass>
             </manifest>
           </archive>
         </configuration>
