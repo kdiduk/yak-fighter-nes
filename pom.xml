@@ -26,7 +26,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.kdiduk.yakfighter.App</mainClass>
+              <mainClass>com.kdiduk.yakfighter.AppFrame</mainClass>
             </manifest>
           </archive>
         </configuration>

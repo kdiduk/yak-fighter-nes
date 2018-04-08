@@ -11,7 +11,7 @@ class PlayerImageComponent extends JComponent
 
     public PlayerImageComponent()
     {
-        java.net.URL imgURL = App.class.getResource(IMAGE_PATH);
+        java.net.URL imgURL = getClass().getResource(IMAGE_PATH);
         ImageIcon imgIcon = new ImageIcon(imgURL);
         mImage = imgIcon.getImage();
     }
