@@ -7,8 +7,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 public class Game  {
-    /* 25 frames per second, 1 frame is 40 msec = 40 * 10^6 nano seconds */
-    public static final long MSECS_PER_FRAME = 40;
+    public static final long MSECS_PER_FRAME = 50;
     public static final long NANOSECS_PER_FRAME = MSECS_PER_FRAME * 1000000;
 
     private JFrame mAppFrame = null;
@@ -21,6 +20,7 @@ public class Game  {
     public Game(String[] args) {
         mViewComponent = new ViewComponent(mController);
         mAppFrame = new AppFrame(mViewComponent);
+        render();
         mAppFrame.setVisible(true);
         mAppFrame.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e) {
@@ -82,10 +82,13 @@ public class Game  {
         else if (mController.isKeyPressed(Controller.Key.DOWN)) {
             mPlayer.moveDown();
         }
+
+        mViewComponent.scrollBackground(4);
     }
 
     private void render() {
         /* TODO */
+        mViewComponent.render();
         mViewComponent.repaint();
     }
 
