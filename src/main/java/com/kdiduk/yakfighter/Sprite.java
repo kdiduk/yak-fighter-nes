@@ -10,10 +10,13 @@ class Sprite {
     private BufferedImage mImage = null;
     private int mPosX = 0;
     private int mPosY = 0;
+    private int mWidth = 0;
+    private int mHeight = 0;
     
     public Sprite() throws Exception {
-        java.net.URL imgURL = getClass().getResource(IMAGE_PATH);
-        mImage = ImageIO.read(imgURL);
+        mImage = ImageIO.read(getClass().getResourceAsStream(IMAGE_PATH));
+        mWidth = mImage.getWidth();
+        mHeight = mImage.getHeight();
 
         mPosX = 350;
         mPosY = 250;
@@ -33,25 +36,25 @@ class Sprite {
 
     public void moveLeft() {
         if (mPosX > 0) {
-            mPosX--;
+            mPosX -= 5;
         }
     }
 
     public void moveRight() {
-        if (mPosX + mImage.getWidth() < 800) {
-            mPosX++;
+        if (mPosX + mWidth < 800) {
+            mPosX += 5;
         }
     }
 
     public void moveUp() {
         if (mPosY > 0) {
-            mPosY--;
+            mPosY -= 5;
         }
     }
 
     public void moveDown() {
-        if (mPosY + mImage.getHeight() < 600) {
-            mPosY++;
+        if (mPosY + mHeight < 600) {
+            mPosY += 5;
         }
     }
 }

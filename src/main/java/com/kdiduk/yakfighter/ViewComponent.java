@@ -67,9 +67,12 @@ class ViewComponent extends JComponent
     @Override
     public void paintComponent(Graphics g)
     {
+        super.paintComponent(g);
+
         for (Sprite s: mSprites) {
             g.drawImage(s.getImage(), s.getPosX(), s.getPosY(), null);
         }
+        Toolkit.getDefaultToolkit().sync();
     }
 
     public Dimension getPreferredSize()

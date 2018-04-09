@@ -7,8 +7,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 public class Game  {
-    /* 50 frames per second, 1 frame is 20 msec = 20 * 10^6 nano seconds */
-    public static final long MSECS_PER_FRAME = 20;
+    /* 25 frames per second, 1 frame is 40 msec = 40 * 10^6 nano seconds */
+    public static final long MSECS_PER_FRAME = 40;
     public static final long NANOSECS_PER_FRAME = MSECS_PER_FRAME * 1000000;
 
     private JFrame mAppFrame = null;
@@ -30,6 +30,7 @@ public class Game  {
         mRunThread = new Thread(() -> {
             mainLoop();
         });
+        mRunThread.setPriority(Thread.MAX_PRIORITY);
         
         try {
             mPlayer = new Sprite();
