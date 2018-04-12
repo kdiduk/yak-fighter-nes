@@ -1,13 +1,14 @@
 package com.kdiduk.yakfighter;
 
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.EventQueue;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 public class Game  {
-    public static final long MSECS_PER_FRAME = 50;
+    public static final long MSECS_PER_FRAME = 40;
     public static final long NANOSECS_PER_FRAME = MSECS_PER_FRAME * 1000000;
 
     private JFrame mAppFrame = null;
@@ -19,14 +20,19 @@ public class Game  {
 
     public Game(String[] args) {
         mViewComponent = new ViewComponent(mController);
-        mAppFrame = new AppFrame(mViewComponent);
-        render();
-        mAppFrame.setVisible(true);
+        mAppFrame = new JFrame("Yak Fighter");
+        mAppFrame.add(mViewComponent);
+        mAppFrame.setSize(800, 600);
+        mAppFrame.setResizable(false);
+        mAppFrame.setFocusable(true);
+        mAppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mAppFrame.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e) {
                 onWindowClose();
             }
         });
+        mAppFrame.setLocationRelativeTo(null);
+        mAppFrame.setVisible(true);
         mRunThread = new Thread(() -> {
             mainLoop();
         });
@@ -41,6 +47,7 @@ public class Game  {
     }
 
     public void run() {
+        mViewComponent.requestFocus();
         mRunThread.start();
     }
 
@@ -52,7 +59,7 @@ public class Game  {
         mGameExit = true;
     }
 
-    private void mainLoop() {
+    public void mainLoop() {
         while (true) {
             long tStart = System.nanoTime();
             if (isGameExit()) {
@@ -66,6 +73,15 @@ public class Game  {
         }
 
         System.out.println("DEBUG: game loop terminated successfully");
+    }
+
+    public void join() {
+        try {
+            mRunThread.join();
+        }
+        catch (InterruptedException e) {
+            System.out.println("FATAL: failed to terminate game main loop.");
+        }
     }
 
     private void update() {
@@ -83,13 +99,11 @@ public class Game  {
             mPlayer.moveDown();
         }
 
-        mViewComponent.scrollBackground(4);
+        mViewComponent.scrollBackground(2);
     }
 
     private void render() {
-        /* TODO */
         mViewComponent.render();
-        mViewComponent.repaint();
     }
 
     private void syncFrame(long startTime) {
@@ -114,10 +128,9 @@ public class Game  {
 
     public static void main(String[] args)
     {
-        EventQueue.invokeLater(() -> {
-            Game game = new Game(args);
-            game.run();
-        });
+        Game game = new Game(args);
+        game.run();
+        // game.join();
     }
 }
 
