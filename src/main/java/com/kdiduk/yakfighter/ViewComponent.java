@@ -1,26 +1,29 @@
 package com.kdiduk.yakfighter;
 
 import java.awt.Graphics;
-import java.awt.Canvas;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-class ViewComponent extends Canvas
+class ViewComponent extends JPanel
 {
     private static final int    WINDOW_WIDTH = 800;
     private static final int    WINDOW_HEIGHT = 600;
     private static final String IMAGE_PATH = "/images/sea-tile.png";
     private Controller mController = null;
     private BufferedImage mBackgroundTileImage = null;
+    private BufferedImage mScreenImage = null;
     private int mBackgroundScrollPos = 10;
     private int mTileWidth = 0;
     private int mTileHeight = 0;
+    private Graphics2D mGraphics;
     List<Sprite> mSprites = new ArrayList<Sprite>();
 
     private class ComponentKeyAdapter extends KeyAdapter {
@@ -64,14 +67,21 @@ class ViewComponent extends Canvas
     public ViewComponent(Controller controller)
     {
         mController = controller;
+        mScreenImage = new BufferedImage(
+                WINDOW_WIDTH,
+                WINDOW_HEIGHT,
+                BufferedImage.TYPE_INT_RGB);
+        mGraphics = (Graphics2D)mScreenImage.getGraphics();
         try {
-            mBackgroundTileImage = ImageIO.read(getClass().getResourceAsStream(IMAGE_PATH));
+            mBackgroundTileImage = ImageIO.read(
+                    getClass().getResourceAsStream(IMAGE_PATH));
         }
         catch (Exception e) {
         }
         mTileWidth = mBackgroundTileImage.getWidth();
         mTileHeight = mBackgroundTileImage.getHeight();
         addKeyListener(new ComponentKeyAdapter());
+        setIgnoreRepaint(true);
     }
 
     public void addSprite(Sprite s) {
@@ -84,49 +94,20 @@ class ViewComponent extends Canvas
     }
 
     public void render() {
-        BufferStrategy bufferStrategy = getBufferStrategy();
-        if (bufferStrategy == null) {
-            createBufferStrategy(3);
-            return;
-        }
-        Graphics gg = bufferStrategy.getDrawGraphics();
-
-        // draw the image in the upper-left corner
-        int xx = 0;
-        int yy = mBackgroundScrollPos;
-        gg.drawImage(mBackgroundTileImage, xx, yy, null);
-
-        for (int i = 1; i * mTileWidth <= WINDOW_WIDTH; i++) {
-            gg.copyArea(xx,
-                       yy,
-                       mTileWidth,
-                       mTileHeight,
-                       i * mTileWidth,
-                       0);
-        }
-        for (int i = 1; i * mTileHeight <= WINDOW_HEIGHT; i *= 2) {
-            gg.copyArea(xx,
-                       yy,
-                       WINDOW_WIDTH,
-                       i * mTileHeight,
-                       0,
-                       i * mTileHeight);
-        }
-        if (mBackgroundScrollPos > 0) {
-            gg.copyArea(xx,
-                       yy,
-                       WINDOW_WIDTH,
-                       mTileHeight,
-                       0,
-                       -mTileHeight);
+        int yy = mBackgroundScrollPos - mTileHeight;
+        for (int x = 0; x < WINDOW_WIDTH; x += mTileWidth) {
+            for (int y = yy; y < WINDOW_HEIGHT; y += mTileHeight) {
+                mGraphics.drawImage(mBackgroundTileImage, x, y, null);
+            }
         }
 
         for (Sprite s: mSprites) {
-            gg.drawImage(s.getImage(), s.getPosX(), s.getPosY(), null);
+            mGraphics.drawImage(s.getImage(), s.getPosX(), s.getPosY(), null);
         }
 
-        gg.dispose();
-        bufferStrategy.show();
+        Graphics g = getGraphics();
+        g.drawImage(mScreenImage, 0, 0, null);
+        g.dispose();
     }
 }
 

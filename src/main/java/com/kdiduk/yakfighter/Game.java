@@ -26,6 +26,7 @@ public class Game  {
         mAppFrame.setResizable(false);
         mAppFrame.setFocusable(true);
         mAppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mAppFrame.setIgnoreRepaint(true);
         mAppFrame.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e) {
                 onWindowClose();
@@ -128,9 +129,14 @@ public class Game  {
 
     public static void main(String[] args)
     {
-        Game game = new Game(args);
-        game.run();
-        // game.join();
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                Game game = new Game(args);
+                game.run();
+            }
+        });
     }
 }
 
