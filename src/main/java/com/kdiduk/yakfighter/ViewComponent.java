@@ -1,7 +1,12 @@
 package com.kdiduk.yakfighter;
 
+import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.image.BufferStrategy;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
@@ -9,21 +14,18 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-class ViewComponent extends JPanel
+class ViewComponent extends Canvas
 {
     private static final int    WINDOW_WIDTH = 800;
     private static final int    WINDOW_HEIGHT = 600;
     private static final String IMAGE_PATH = "/images/sea-tile.png";
     private Controller mController = null;
     private BufferedImage mBackgroundTileImage = null;
-    private BufferedImage mScreenImage = null;
     private int mBackgroundScrollPos = 10;
     private int mTileWidth = 0;
     private int mTileHeight = 0;
-    private Graphics2D mGraphics;
     List<Sprite> mSprites = new ArrayList<Sprite>();
 
     private class ComponentKeyAdapter extends KeyAdapter {
@@ -67,19 +69,24 @@ class ViewComponent extends JPanel
     public ViewComponent(Controller controller)
     {
         mController = controller;
-        mScreenImage = new BufferedImage(
-                WINDOW_WIDTH,
-                WINDOW_HEIGHT,
-                BufferedImage.TYPE_INT_RGB);
-        mGraphics = (Graphics2D)mScreenImage.getGraphics();
         try {
-            mBackgroundTileImage = ImageIO.read(
+            GraphicsConfiguration gfxConfig =
+                GraphicsEnvironment.getLocalGraphicsEnvironment()
+                                   .getDefaultScreenDevice()
+                                   .getDefaultConfiguration();
+            BufferedImage tile = ImageIO.read(
                     getClass().getResourceAsStream(IMAGE_PATH));
+            mTileWidth = tile.getWidth();
+            mTileHeight = tile.getHeight();
+            
+            mBackgroundTileImage = gfxConfig.createCompatibleImage(
+                    mTileWidth, mTileHeight, Transparency.BITMASK);
+            Graphics2D g = (Graphics2D)mBackgroundTileImage.getGraphics();
+            g.drawImage(tile, 0, 0, null);
+            g.dispose();
         }
         catch (Exception e) {
         }
-        mTileWidth = mBackgroundTileImage.getWidth();
-        mTileHeight = mBackgroundTileImage.getHeight();
         addKeyListener(new ComponentKeyAdapter());
         setIgnoreRepaint(true);
     }
@@ -94,20 +101,26 @@ class ViewComponent extends JPanel
     }
 
     public void render() {
+        BufferStrategy bs = getBufferStrategy();
+        if (bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
+
+        Graphics2D g = (Graphics2D)bs.getDrawGraphics();
         int yy = mBackgroundScrollPos - mTileHeight;
         for (int x = 0; x < WINDOW_WIDTH; x += mTileWidth) {
             for (int y = yy; y < WINDOW_HEIGHT; y += mTileHeight) {
-                mGraphics.drawImage(mBackgroundTileImage, x, y, null);
+                g.drawImage(mBackgroundTileImage, x, y, null);
             }
         }
 
         for (Sprite s: mSprites) {
-            mGraphics.drawImage(s.getImage(), s.getPosX(), s.getPosY(), null);
+            g.drawImage(s.getImage(), s.getPosX(), s.getPosY(), null);
         }
 
-        Graphics g = getGraphics();
-        g.drawImage(mScreenImage, 0, 0, null);
         g.dispose();
+        bs.show();
     }
 }
 

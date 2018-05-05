@@ -8,7 +8,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 public class Game  {
-    public static final long MSECS_PER_FRAME = 40;
+    public static final short FRAMES_PER_SECOND = 60;
+    public static final long MSECS_PER_FRAME = 1000 / FRAMES_PER_SECOND;
     public static final long NANOSECS_PER_FRAME = MSECS_PER_FRAME * 1000000;
 
     private JFrame mAppFrame = null;
@@ -37,7 +38,6 @@ public class Game  {
         mRunThread = new Thread(() -> {
             mainLoop();
         });
-        mRunThread.setPriority(Thread.MAX_PRIORITY);
         
         try {
             mPlayer = new Sprite();
@@ -100,7 +100,7 @@ public class Game  {
             mPlayer.moveDown();
         }
 
-        mViewComponent.scrollBackground(2);
+        mViewComponent.scrollBackground(1);
     }
 
     private void render() {
@@ -108,9 +108,12 @@ public class Game  {
     }
 
     private void syncFrame(long startTime) {
-        long endTime = startTime + NANOSECS_PER_FRAME;
         try {
-            TimeUnit.NANOSECONDS.sleep(endTime - System.nanoTime());
+            long endTime = startTime + NANOSECS_PER_FRAME;
+            long now = System.nanoTime();
+            if (endTime > now) {
+                TimeUnit.NANOSECONDS.sleep(endTime - now);
+            }
         }
         catch (InterruptedException e) {
             System.out.println("WARNING: frame sync failed");

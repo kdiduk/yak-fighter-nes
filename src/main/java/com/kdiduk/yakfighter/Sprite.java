@@ -14,9 +14,21 @@ class Sprite {
     private int mHeight = 0;
     
     public Sprite() throws Exception {
-        mImage = ImageIO.read(getClass().getResourceAsStream(IMAGE_PATH));
-        mWidth = mImage.getWidth();
-        mHeight = mImage.getHeight();
+
+        GraphicsConfiguration gfxConfig =
+            GraphicsEnvironment.getLocalGraphicsEnvironment()
+                               .getDefaultScreenDevice()
+                               .getDefaultConfiguration();
+        BufferedImage sprite = ImageIO.read(
+                getClass().getResourceAsStream(IMAGE_PATH));
+        mWidth = sprite.getWidth();
+        mHeight = sprite.getHeight();
+        
+        mImage = gfxConfig.createCompatibleImage(
+                mWidth, mHeight, sprite.getTransparency());
+        Graphics2D g = (Graphics2D)mImage.getGraphics();
+        g.drawImage(sprite, 0, 0, null);
+        g.dispose();
 
         mPosX = 350;
         mPosY = 250;
