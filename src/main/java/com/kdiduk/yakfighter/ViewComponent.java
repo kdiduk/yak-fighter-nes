@@ -23,7 +23,7 @@ class ViewComponent extends Canvas
     private static final String IMAGE_PATH = "/images/sea-tile.png";
     private Controller mController = null;
     private BufferedImage mBackgroundTileImage = null;
-    private int mBackgroundScrollPos = 10;
+    private int mBackgroundScrollPos = 0;
     private int mTileWidth = 0;
     private int mTileHeight = 0;
     List<Sprite> mSprites = new ArrayList<Sprite>();
@@ -95,9 +95,11 @@ class ViewComponent extends Canvas
         mSprites.add(s);
     }
 
-    public void scrollBackground(int dy) {
-        mBackgroundScrollPos += dy;
-        mBackgroundScrollPos %= mTileHeight;
+    public void scrollBackground() {
+        mBackgroundScrollPos++;
+        if (mBackgroundScrollPos >= mTileHeight) {
+            mBackgroundScrollPos = 0;
+        }
     }
 
     public void render() {
@@ -109,8 +111,8 @@ class ViewComponent extends Canvas
 
         Graphics2D g = (Graphics2D)bs.getDrawGraphics();
         int yy = mBackgroundScrollPos - mTileHeight;
-        for (int x = 0; x < WINDOW_WIDTH; x += mTileWidth) {
-            for (int y = yy; y < WINDOW_HEIGHT; y += mTileHeight) {
+        for (int y = yy; y < WINDOW_HEIGHT; y += mTileHeight) {
+            for (int x = 0; x < WINDOW_WIDTH; x += mTileWidth) {
                 g.drawImage(mBackgroundTileImage, x, y, null);
             }
         }

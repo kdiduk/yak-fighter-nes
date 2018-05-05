@@ -100,7 +100,7 @@ public class Game  {
             mPlayer.moveDown();
         }
 
-        mViewComponent.scrollBackground(1);
+        mViewComponent.scrollBackground();
     }
 
     private void render() {
