@@ -14,9 +14,8 @@ class Game:
         self._is_quit_event = False
         self._scroll_pos = 0
         self._screen = pygame.display.set_mode(
-                # (Game.RESX * Game.SCALE, Game.RESY * Game.SCALE),
-                (0,0),
-                pygame.DOUBLEBUF | pygame.FULLSCREEN)
+                (Game.RESX * Game.SCALE, Game.RESY * Game.SCALE),
+                pygame.DOUBLEBUF)
         self._left_pressed = False
         self._right_pressed = False
         self._up_pressed = False
@@ -74,9 +73,7 @@ class Game:
     def _render(self, ms_elapsed):
         screen_size = (Game.RESX * Game.SCALE, Game.RESY * Game.SCALE)
         shift = 2* self._tile_size[1] - self._scroll_pos
-        clip = (0, shift * Game.SCALE,
-                screen_size[0],
-                screen_size[1] + shift * Game.SCALE)
+        clip = (0, shift * Game.SCALE, screen_size[0], screen_size[1])
         self._screen.blit(
                 self._background,
                 (0, 0, screen_size[0], screen_size[1]),
