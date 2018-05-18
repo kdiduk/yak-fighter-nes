@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from yak_fighter.controls import Controller
+from yak_fighter.controls import Key
 import pygame
 
 
@@ -16,10 +18,7 @@ class Game:
         self._screen = pygame.display.set_mode(
                 (Game.RESX * Game.SCALE, Game.RESY * Game.SCALE),
                 pygame.DOUBLEBUF)
-        self._left_pressed = False
-        self._right_pressed = False
-        self._up_pressed = False
-        self._down_pressed = False
+        self._controller = Controller()
         self._tile = pygame.image.load('data/images/sea_tile.png').convert()
         self._tile_size = self._tile.get_size()
 
@@ -47,28 +46,31 @@ class Game:
         elapsed = 0
         while True:
             self._update_system_events()
+            self._update(elapsed)
             if self._is_quit_event:
                 break
 
-            self._update(elapsed)
             self._render(elapsed)
-
             elapsed = clock.tick_busy_loop(Game.FPS)
 
     def _update(self, ms_elapsed):
+        if self._controller.is_pressed(Key.CANCEL):
+            self._is_quit_event = True
+            return
+
         self._scroll_elapsed += ms_elapsed
-        if (self._scroll_elapsed > (1000 // Game.FPS) + 5):
+        if self._scroll_elapsed > (1000 // Game.FPS) + 5:
             self._scroll_elapsed = 0
             self._scroll_pos += 1
             self._scroll_pos %= self._tile_size[1]
-            if self._left_pressed:
-                self._player_rect = self._player_rect.move((-1 * Game.SCALE, 0))
-            if self._right_pressed:
-                self._player_rect = self._player_rect.move((1 * Game.SCALE, 0))
-            if self._up_pressed:
-                self._player_rect = self._player_rect.move((0, -1 * Game.SCALE))
-            if self._down_pressed:
-                self._player_rect = self._player_rect.move((0, 1 * Game.SCALE))
+            if self._controller.is_pressed(Key.LEFT) and self._player_rect.left > 0:
+                self._player_rect = self._player_rect.move((-2 * Game.SCALE, 0))
+            if self._controller.is_pressed(Key.RIGHT) and self._player_rect.right < Game.RESX * Game.SCALE:
+                self._player_rect = self._player_rect.move((2 * Game.SCALE, 0))
+            if self._controller.is_pressed(Key.UP) and self._player_rect.top > 0:
+                self._player_rect = self._player_rect.move((0, -2 * Game.SCALE))
+            if self._controller.is_pressed(Key.DOWN) and self._player_rect.bottom < Game.RESY * Game.SCALE:
+                self._player_rect = self._player_rect.move((0, 2 * Game.SCALE))
 
     def _render(self, ms_elapsed):
         screen_size = (Game.RESX * Game.SCALE, Game.RESY * Game.SCALE)
@@ -85,25 +87,17 @@ class Game:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 self.quit()
-            elif e.type == pygame.KEYDOWN:
+            elif e.type == pygame.KEYDOWN or e.type == pygame.KEYUP:
+                pressed = True if e.type == pygame.KEYDOWN else False
                 if e.key == pygame.K_ESCAPE:
-                    self.quit()
+                    self._controller.set_pressed(Key.CANCEL, pressed)
                 elif e.key == pygame.K_LEFT:
-                    self._left_pressed = True
+                    self._controller.set_pressed(Key.LEFT, pressed)
                 elif e.key == pygame.K_RIGHT:
-                    self._right_pressed = True
+                    self._controller.set_pressed(Key.RIGHT, pressed)
                 elif e.key == pygame.K_UP:
-                    self._up_pressed = True
+                    self._controller.set_pressed(Key.UP, pressed)
                 elif e.key == pygame.K_DOWN:
-                    self._down_pressed = True
-            elif e.type == pygame.KEYUP:
-                if e.key == pygame.K_LEFT:
-                    self._left_pressed = False
-                elif e.key == pygame.K_RIGHT:
-                    self._right_pressed = False
-                elif e.key == pygame.K_UP:
-                    self._up_pressed = False
-                elif e.key == pygame.K_DOWN:
-                    self._down_pressed = False
+                    self._controller.set_pressed(Key.DOWN, pressed)
 
 # eof
