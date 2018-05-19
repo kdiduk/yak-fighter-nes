@@ -44,18 +44,15 @@ class Game:
     def run(self):
         clock = pygame.time.Clock()
         elapsed = 0
-        while True:
+        while not self._is_quit_event:
             self._update_system_events()
             self._update(elapsed)
-            if self._is_quit_event:
-                break
-
             self._render(elapsed)
             elapsed = clock.tick_busy_loop(Game.FPS)
 
     def _update(self, ms_elapsed):
         if self._controller.is_pressed(Key.CANCEL):
-            self._is_quit_event = True
+            self.quit()
             return
 
         self._scroll_elapsed += ms_elapsed
@@ -84,20 +81,12 @@ class Game:
         pygame.display.flip()
 
     def _update_system_events(self):
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                self.quit()
-            elif e.type == pygame.KEYDOWN or e.type == pygame.KEYUP:
-                pressed = True if e.type == pygame.KEYDOWN else False
-                if e.key == pygame.K_ESCAPE:
-                    self._controller.set_pressed(Key.CANCEL, pressed)
-                elif e.key == pygame.K_LEFT:
-                    self._controller.set_pressed(Key.LEFT, pressed)
-                elif e.key == pygame.K_RIGHT:
-                    self._controller.set_pressed(Key.RIGHT, pressed)
-                elif e.key == pygame.K_UP:
-                    self._controller.set_pressed(Key.UP, pressed)
-                elif e.key == pygame.K_DOWN:
-                    self._controller.set_pressed(Key.DOWN, pressed)
+        if pygame.event.get(pygame.QUIT):
+            self.quit()
+        self._controller.update(
+            pygame.event.get((pygame.KEYUP, pygame.KEYDOWN)))
+
+        # remove remaining events from the queue
+        pygame.event.get()
 
 # eof
