@@ -4,10 +4,10 @@ import pygame
 
 
 class Screen:
-    def __init__(self, resolution, screen_size):
+    def __init__(self, resolution, scale):
         self._resolution = resolution
-        self._screen_size = screen_size
-        self._display = pygame.display.set_mode(screen_size, pygame.DOUBLEBUF)
+        self._screen_size = (resolution[0]*scale, resolution[1]*scale)
+        self._display = pygame.display.set_mode(self._screen_size, pygame.DOUBLEBUF)
         self._buffer = pygame.Surface(resolution, pygame.HWSURFACE)
 
     def blit(self, surface, rect, area=None):
