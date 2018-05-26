@@ -9,7 +9,7 @@ import pygame
 
 
 class Game:
-    FPS = 50
+    FPS = 60
     RESX = 320
     RESY = 240
     SCALE = 3
