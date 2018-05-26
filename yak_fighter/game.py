@@ -20,7 +20,15 @@ class Game:
         self._screen = Screen((Game.RESX, Game.RESY), Game.SCALE)
         self._controller = Controller()
         self._level = Level(self)
-        self._player = Player(self)
+        self._objects = [Player(self)]
+        self._add_obj = []
+        self._rem_obj = []
+
+    def add_object(self, obj):
+        self._add_obj.append(obj)
+
+    def remove_object(self, obj):
+        self._rem_obj.append(obj)
 
     def get_controller(self):
         return self._controller
@@ -42,11 +50,18 @@ class Game:
             self.quit()
             return
         self._level.update(ms_elapsed)
-        self._player.update(ms_elapsed)
+        for obj in self._objects:
+            obj.update(ms_elapsed)
+        for robj in self._rem_obj:
+            self._objects.remove(robj)
+        self._objects.extend(self._add_obj)
+        self._add_obj = []
+        self._rem_obj = []
 
     def _render(self, ms_elapsed):
         self._level.render(self._screen)
-        self._player.render(self._screen)
+        for obj in self._objects:
+            obj.render(self._screen)
         self._screen.flip()
 
     def _update_system_events(self):
