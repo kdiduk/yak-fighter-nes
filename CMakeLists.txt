@@ -45,7 +45,8 @@ aux_source_directory("src" SRC_LIST)
 file(GLOB HDR_LIST "*.h")
 
 add_executable(${PROJECT_NAME} ${HDR_LIST} ${SRC_LIST})
-
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2IMAGE_LIBRARIES})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_d")
 
 # EOF
