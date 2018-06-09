@@ -22,30 +22,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "game.h"
+#ifndef YF_GAME_H
+#define YF_GAME_H
 
-#include <stdio.h>
+#define GAME_RESOLUTION_X (320u)
+#define GAME_RESOLUTION_Y (240u)
 
+int game_init(int argc, char** argv);
 
-int main(int argc, char**argv)
-{
-    int error = 0;
+void game_shutdown(void);
 
-    error = game_init(argc, argv);
-    if (error) {
-        printf("Fatal: game init failed with error %d\n", error);
-        goto cleanup;
-    }
+int game_run(void);
 
-    error = game_run();
-    if (error) {
-        printf("Fatal: game run failed with error %d\n", error);
-    }
+void game_quit(void);
 
-cleanup:
-    game_shutdown();
-
-    return error;
-}
-
-/* EOF */
+#endif /* YF_GAME_H */
