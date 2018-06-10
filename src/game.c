@@ -23,15 +23,17 @@
  */
 
 #include "game.h"
+#include "level.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stddef.h>
 #include <stdio.h>
 
-
-#define TICKS_PER_FRAME (15u)
+#define TICKS_PER_FRAME (40u)
 #define WAIT_EVENT_TIMEOUT (1000u)
-#define MAIN_RENDERER_FLAGS (SDL_RENDERER_ACCELERATED)
+#define MAIN_WINDOW_FLAGS (SDL_WINDOW_FULLSCREEN_DESKTOP)
+#define MAIN_RENDERER_FLAGS (SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 
 static int is_running_flag = 0;
 static SDL_TimerID tick_timer_id = 0;
@@ -39,13 +41,15 @@ static SDL_TimerID tick_timer_id = 0;
 static SDL_Window* main_window = NULL;
 static SDL_Renderer* main_renderer = NULL;
 
+static void update(void);
+static void render(void);
 static int is_running(void);
 static Uint32 tick_timer_callback(Uint32 interval, void* param);
-
 
 int game_init(int argc, char** argv)
 {
     int error = 0;
+    int img_status = 0;
     (void)argc, (void)argv; /* unused parameters */
 
     error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
@@ -54,12 +58,19 @@ int game_init(int argc, char** argv)
         return error;
     }
 
+    img_status = IMG_Init(IMG_INIT_PNG);
+    if ((img_status&IMG_INIT_PNG) != IMG_INIT_PNG) {
+        printf("Fatal: Unable to initialize SDL Image. `%s`\n",
+               IMG_GetError());
+        return (-1);
+    }
+
     main_window = SDL_CreateWindow("Yak Fighter!",
                                    SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED,
                                    GAME_RESOLUTION_X * 3,
                                    GAME_RESOLUTION_Y * 3,
-                                   SDL_WINDOW_SHOWN);
+                                   MAIN_WINDOW_FLAGS);
     if (!main_window) {
         printf("Fatal: Unable to create main window. `%s`\n", SDL_GetError());
         return (-1);
@@ -69,6 +80,25 @@ int game_init(int argc, char** argv)
     if (!main_renderer) {
         printf("Fatal: Unable to create main renderer. `%s`\n", SDL_GetError());
         return (-1);
+    }
+
+    error = SDL_RenderSetLogicalSize(main_renderer,
+                                     GAME_RESOLUTION_X,
+                                     GAME_RESOLUTION_Y);
+    if (error) {
+        printf("Error: Unable to set renderer logical size. `%s`\n",
+               SDL_GetError());
+        return error;
+    }
+
+    if (SDL_ShowCursor(SDL_DISABLE) < 0) {
+        printf("Warning: failed to hide the cursor\n");
+    }
+
+    error = level_load(main_renderer);
+    if (error) {
+        printf("Fatal: failed to load game level\n");
+        return error;
     }
 
     tick_timer_id = SDL_AddTimer(TICKS_PER_FRAME, tick_timer_callback, NULL);
@@ -87,6 +117,8 @@ void game_shutdown(void)
         tick_timer_id = 0;
     }
 
+    level_unload();
+
     if (main_renderer) {
         SDL_DestroyRenderer(main_renderer);
         main_renderer = NULL;
@@ -97,6 +129,7 @@ void game_shutdown(void)
         main_window = NULL;
     }
 
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -118,12 +151,13 @@ int game_run(void)
             break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                game_quit();
+            }
             break;
         case SDL_USEREVENT:
-            /* TODO: update game state */
-            SDL_RenderClear(main_renderer);
-            /* TODO: render game */
-            SDL_RenderPresent(main_renderer);
+            update();
+            render();
             break;
         }
     } while (is_running());
@@ -137,6 +171,19 @@ void game_quit(void)
 }
 
 /* static functions implementation */
+
+void update(void)
+{
+    level_update(TICKS_PER_FRAME);
+}
+
+void render(void)
+{
+    /* No render clear because we always redraw the whole screen */
+    SDL_RenderClear(main_renderer);
+    level_render(main_renderer);
+    SDL_RenderPresent(main_renderer);
+}
 
 int is_running(void)
 {
