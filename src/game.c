@@ -22,6 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "control.h"
 #include "game.h"
 #include "level.h"
 
@@ -151,14 +152,16 @@ int game_run(void)
             break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                game_quit();
-            }
+            control_update(&event.key);
             break;
         case SDL_USEREVENT:
             update();
             render();
             break;
+        }
+
+        if (control_pressed(CKEY_ESCAPE)) {
+            game_quit();
         }
     } while (is_running());
 
