@@ -26,8 +26,11 @@
 #include "level.h"
 #include <SDL2/SDL_image.h>
 
+#define SCROLL_TIMEOUT (40u)
+
 static SDL_Texture* bg_texture = NULL;
 static SDL_Rect camera_rect;
+static unsigned scroll_elapsed_ms = 0;
 
 int level_load(SDL_Renderer* renderer)
 {
@@ -54,14 +57,18 @@ int level_load(SDL_Renderer* renderer)
 
     SDL_FreeSurface(surface);
 
+    scroll_elapsed_ms = 0;
+
     return 0;
 }
 
 void level_update(unsigned elapsed)
 {
-    (void) elapsed;
-
-    camera_rect.y--;
+    scroll_elapsed_ms += elapsed;
+    if (scroll_elapsed_ms >= SCROLL_TIMEOUT) {
+        scroll_elapsed_ms = 0;
+        camera_rect.y--;
+    }
 
     if (camera_rect.y < 0) {
         game_quit();
