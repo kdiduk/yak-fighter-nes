@@ -1,0 +1,7 @@
+TODO
+
+- shadows
+- birds
+- scores counting
+- main menu screen
+- game over screen
