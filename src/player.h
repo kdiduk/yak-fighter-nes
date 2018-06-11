@@ -22,17 +22,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_LEVEL_H
-#define YF_LEVEL_H
+#ifndef YF_PLAYER_H
+#define YF_PLAYER_H
 
 #include <SDL2/SDL_render.h>
 
-int level_load(SDL_Renderer* rr);
+int player_load(SDL_Renderer* rr);
 
-void level_unload(void);
+void player_unload(void);
 
-void level_update(unsigned dt);
+void player_update(unsigned dt);
 
-void level_render(SDL_Renderer* rr);
+void player_render(SDL_Renderer* rr);
 
-#endif /* YF_LEVEL_H */
+#endif /* YF_PLAYER_H */

@@ -25,18 +25,19 @@
 #include "control.h"
 #include "game.h"
 #include "level.h"
+#include "player.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stddef.h>
 #include <stdio.h>
 
-#define TICKS_PER_FRAME     (10u)
+#define TICKS_PER_FRAME     (20u)
 #define WAIT_EVENT_TIMEOUT  (1000u)
 #define WINDOW_FLAGS        (0)
-#define RENDERER_FLAGS      (SDL_RENDERER_ACCELERATED)
-#define WINDOW_WIDTH        (3u * GAME_RESOLUTION_X)
-#define WINDOW_HEIGHT       (3u * GAME_RESOLUTION_Y)
+#define RENDERER_FLAGS      (SDL_RENDERER_SOFTWARE)
+#define WINDOW_WIDTH        (3u * GAME_RES_X)
+#define WINDOW_HEIGHT       (3u * GAME_RES_Y)
 
 static int              is_running_flag     = 0;
 static SDL_TimerID      tick_timer_id       = 0;
@@ -84,9 +85,7 @@ int game_init(int argc, char** argv)
         return (-1);
     }
 
-    error = SDL_RenderSetLogicalSize(main_renderer,
-                                     GAME_RESOLUTION_X,
-                                     GAME_RESOLUTION_Y);
+    error = SDL_RenderSetLogicalSize(main_renderer, GAME_RES_X, GAME_RES_Y);
     if (error) {
         printf("Error: SDL_RenderSetLogicalSize(): `%s`\n", SDL_GetError());
         return error;
@@ -96,9 +95,20 @@ int game_init(int argc, char** argv)
         printf("Warning: failed to hide the cursor\n");
     }
 
+    error = SDL_SetRenderDrawColor(main_renderer, 0, 0, 0, 255);
+    if (error) {
+        printf("Fatal: failed to set render draw color. `%s`'n", SDL_GetError());
+        return error;
+    }
     error = level_load(main_renderer);
     if (error) {
         printf("Fatal: failed to load game level\n");
+        return error;
+    }
+
+    error = player_load(main_renderer);
+    if (error) {
+        printf("Fatal: failed to load the player\n");
         return error;
     }
 
@@ -118,6 +128,7 @@ void game_shutdown(void)
         tick_timer_id = 0;
     }
 
+    player_unload();
     level_unload();
 
     if (main_renderer) {
@@ -177,17 +188,18 @@ void game_quit(void)
 
 void update(void)
 {
-    unsigned now = 0;
+    const unsigned dt = SDL_GetTicks() - last_update_ticks;
 
-    now = SDL_GetTicks();
-    level_update(now - last_update_ticks);
-    last_update_ticks = now;
+    level_update(dt);
+    player_update(dt);
+    last_update_ticks = SDL_GetTicks();
 }
 
 void render(void)
 {
     SDL_RenderClear(main_renderer);
     level_render(main_renderer);
+    player_render(main_renderer);
     SDL_RenderPresent(main_renderer);
 }
 

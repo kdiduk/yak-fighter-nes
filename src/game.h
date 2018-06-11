@@ -25,8 +25,8 @@
 #ifndef YF_GAME_H
 #define YF_GAME_H
 
-#define GAME_RESOLUTION_X (320u)
-#define GAME_RESOLUTION_Y (240u)
+#define GAME_RES_X (320u)
+#define GAME_RES_Y (240u)
 
 int game_init(int argc, char** argv);
 

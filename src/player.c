@@ -22,69 +22,76 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "control.h"
 #include "game.h"
-#include "level.h"
+#include "player.h"
 #include <SDL2/SDL_image.h>
 
-#define SCROLL_TIMEOUT (40u)
+static SDL_Texture* yak_texture = NULL;
+static SDL_Rect     yak_rect;
 
-static SDL_Texture* bg_texture = NULL;
-static SDL_Rect camera_rect;
-static unsigned scroll_elapsed_ms = 0;
-
-int level_load(SDL_Renderer* rr)
+int player_load(SDL_Renderer* rr)
 {
     SDL_Surface* surface = NULL;
 
-    surface = IMG_Load("../data/level_01.png");
+    surface = IMG_Load("../data/yak_main.png");
     if (!surface) {
         printf("Fatal: failed to load image. `%s`\n", IMG_GetError());
         return (-1);
     }
 
-    bg_texture = SDL_CreateTextureFromSurface(rr, surface);
-    if (!bg_texture) {
+    yak_texture = SDL_CreateTextureFromSurface(rr, surface);
+    if (!yak_texture) {
         SDL_FreeSurface(surface);
         printf("Fatal: failed to create texture from surface. `%s`\n", SDL_GetError());
         return (-1);
     }
 
-    camera_rect.x = 0;
-    camera_rect.y = surface->h - GAME_RES_Y;
-    camera_rect.w = GAME_RES_X;
-    camera_rect.h = GAME_RES_Y;
+    yak_rect.x = (GAME_RES_X - surface->w) / 2;
+    yak_rect.y = (GAME_RES_Y - surface->h) / 2;
+    yak_rect.w = surface->w;
+    yak_rect.h = surface->h;
 
     SDL_FreeSurface(surface);
-
-    scroll_elapsed_ms = 0;
 
     return 0;
 }
 
-void level_unload(void)
+void player_unload(void)
 {
-    if (bg_texture) {
-        SDL_DestroyTexture(bg_texture);
-        bg_texture = NULL;
+    if (yak_texture) {
+        SDL_DestroyTexture(yak_texture);
+        yak_texture = NULL;
     }
 }
 
-void level_update(unsigned dt)
+void player_update(unsigned dt)
 {
-    scroll_elapsed_ms += dt;
-    if (scroll_elapsed_ms >= SCROLL_TIMEOUT) {
-        scroll_elapsed_ms = 0;
-        camera_rect.y--;
+    const int max_x = (signed)GAME_RES_X - yak_rect.w;
+    const int max_y = (signed)GAME_RES_Y - yak_rect.h;
+
+    (void) dt;
+
+    if (control_pressed(CKEY_LEFT) && (yak_rect.x > 0)) {
+        yak_rect.x--;
     }
 
-    if (camera_rect.y < 0) {
-        game_quit();
+    if (control_pressed(CKEY_RIGHT) && (yak_rect.x < max_x)) {
+        yak_rect.x++;
+    }
+
+    if (control_pressed(CKEY_UP) && (yak_rect.y > 0)) {
+        yak_rect.y--;
+    }
+
+    if (control_pressed(CKEY_DOWN) && (yak_rect.y < max_y)) {
+        yak_rect.y++;
     }
 }
 
-void level_render(SDL_Renderer* rr)
+void player_render(SDL_Renderer* rr)
 {
-    SDL_RenderCopy(rr, bg_texture, &camera_rect, NULL);
+    SDL_RenderCopy(rr, yak_texture, NULL, &yak_rect);
 }
 
 /* EOF */
