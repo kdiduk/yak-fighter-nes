@@ -26,6 +26,7 @@
 #include "game.h"
 #include "level.h"
 #include "player.h"
+#include "textures.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -100,13 +101,20 @@ int game_init(int argc, char** argv)
         printf("Fatal: failed to set render draw color. `%s`'n", SDL_GetError());
         return error;
     }
-    error = level_load(main_renderer);
+
+    error = textures_load(main_renderer);
+    if (error) {
+        printf("Fatal: failed to load textures\n");
+        return error;
+    }
+
+    error = level_load();
     if (error) {
         printf("Fatal: failed to load game level\n");
         return error;
     }
 
-    error = player_load(main_renderer);
+    error = player_load();
     if (error) {
         printf("Fatal: failed to load the player\n");
         return error;
@@ -130,6 +138,7 @@ void game_shutdown(void)
 
     player_unload();
     level_unload();
+    textures_unload();
 
     if (main_renderer) {
         SDL_DestroyRenderer(main_renderer);

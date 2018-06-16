@@ -22,17 +22,26 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
+#ifndef YF_TEXTURES_H
+#define YF_TEXTURES_H
 
 #include <SDL2/SDL_render.h>
 
-int player_load(void);
+enum texture_id {
+    TX_YAK_MAIN,
+    TX_BULLET,
+    TX_LEVEL_01,
+    MAX_TEXTURE_ID
+};
 
-void player_unload(void);
+int textures_load(SDL_Renderer* rr);
 
-void player_update(unsigned dt);
+void textures_unload(void);
 
-void player_render(SDL_Renderer* rr);
+SDL_Texture* textures_get(enum texture_id txid);
 
-#endif /* YF_PLAYER_H */
+int textures_get_width(enum texture_id txid);
+
+int textures_get_height(enum texture_id txid);
+
+#endif /* YF_TEXTURES_H */

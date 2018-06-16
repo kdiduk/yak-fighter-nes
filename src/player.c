@@ -25,44 +25,27 @@
 #include "control.h"
 #include "game.h"
 #include "player.h"
-#include <SDL2/SDL_image.h>
+#include "textures.h"
+#include <SDL2/SDL_rect.h>
 
-static SDL_Texture* yak_texture = NULL;
-static SDL_Rect     yak_rect;
+static SDL_Rect yak_rect;
 
-int player_load(SDL_Renderer* rr)
+int player_load(void)
 {
-    SDL_Surface* surface = NULL;
+    int w = textures_get_width(TX_YAK_MAIN);
+    int h = textures_get_height(TX_YAK_MAIN);
 
-    surface = IMG_Load("../data/yak_main.png");
-    if (!surface) {
-        printf("Fatal: failed to load image. `%s`\n", IMG_GetError());
-        return (-1);
-    }
-
-    yak_texture = SDL_CreateTextureFromSurface(rr, surface);
-    if (!yak_texture) {
-        SDL_FreeSurface(surface);
-        printf("Fatal: failed to create texture from surface. `%s`\n", SDL_GetError());
-        return (-1);
-    }
-
-    yak_rect.x = (GAME_RES_X - surface->w) / 2;
-    yak_rect.y = (GAME_RES_Y - surface->h) / 2;
-    yak_rect.w = surface->w;
-    yak_rect.h = surface->h;
-
-    SDL_FreeSurface(surface);
+    yak_rect.x = (GAME_RES_X - w) / 2;
+    yak_rect.y = (GAME_RES_Y - h) / 2;
+    yak_rect.w = w;
+    yak_rect.h = h;
 
     return 0;
 }
 
 void player_unload(void)
 {
-    if (yak_texture) {
-        SDL_DestroyTexture(yak_texture);
-        yak_texture = NULL;
-    }
+    /* TODO */
 }
 
 void player_update(unsigned dt)
@@ -91,7 +74,7 @@ void player_update(unsigned dt)
 
 void player_render(SDL_Renderer* rr)
 {
-    SDL_RenderCopy(rr, yak_texture, NULL, &yak_rect);
+    SDL_RenderCopy(rr, textures_get(TX_YAK_MAIN), NULL, &yak_rect);
 }
 
 /* EOF */

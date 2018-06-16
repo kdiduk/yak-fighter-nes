@@ -24,37 +24,20 @@
 
 #include "game.h"
 #include "level.h"
-#include <SDL2/SDL_image.h>
+#include "textures.h"
+#include <SDL2/SDL_rect.h>
 
 #define SCROLL_TIMEOUT (40u)
 
-static SDL_Texture* bg_texture = NULL;
 static SDL_Rect camera_rect;
 static unsigned scroll_elapsed_ms = 0;
 
-int level_load(SDL_Renderer* rr)
+int level_load(void)
 {
-    SDL_Surface* surface = NULL;
-
-    surface = IMG_Load("../data/level_01.png");
-    if (!surface) {
-        printf("Fatal: failed to load image. `%s`\n", IMG_GetError());
-        return (-1);
-    }
-
-    bg_texture = SDL_CreateTextureFromSurface(rr, surface);
-    if (!bg_texture) {
-        SDL_FreeSurface(surface);
-        printf("Fatal: failed to create texture from surface. `%s`\n", SDL_GetError());
-        return (-1);
-    }
-
     camera_rect.x = 0;
-    camera_rect.y = surface->h - GAME_RES_Y;
+    camera_rect.y = textures_get_height(TX_LEVEL_01) - GAME_RES_Y;
     camera_rect.w = GAME_RES_X;
     camera_rect.h = GAME_RES_Y;
-
-    SDL_FreeSurface(surface);
 
     scroll_elapsed_ms = 0;
 
@@ -63,10 +46,7 @@ int level_load(SDL_Renderer* rr)
 
 void level_unload(void)
 {
-    if (bg_texture) {
-        SDL_DestroyTexture(bg_texture);
-        bg_texture = NULL;
-    }
+    /* TODO */
 }
 
 void level_update(unsigned dt)
@@ -84,7 +64,7 @@ void level_update(unsigned dt)
 
 void level_render(SDL_Renderer* rr)
 {
-    SDL_RenderCopy(rr, bg_texture, &camera_rect, NULL);
+    SDL_RenderCopy(rr, textures_get(TX_LEVEL_01), &camera_rect, NULL);
 }
 
 /* EOF */

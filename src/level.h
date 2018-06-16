@@ -27,7 +27,7 @@
 
 #include <SDL2/SDL_render.h>
 
-int level_load(SDL_Renderer* rr);
+int level_load(void);
 
 void level_unload(void);
 
