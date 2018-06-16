@@ -23,26 +23,34 @@
  */
 
 #include "control.h"
+#include "engine.h"
 #include "game.h"
 #include "player.h"
+#include "sprite.h"
 #include "textures.h"
 #include <SDL2/SDL_rect.h>
 
-#define RELOAD_TIMEOUT (200u)
+#define RELOAD_TIMEOUT (300u)
 
-static SDL_Rect yak_rect;
-static unsigned reload_time = 0;
+static int  sprite_index = 0;
+static int  reload_time = 0;
+
+static void player_fire(const SDL_Rect* rect);
 
 int player_load(void)
 {
-    int w = textures_get_width(TX_YAK_MAIN);
-    int h = textures_get_height(TX_YAK_MAIN);
+    struct sprite spr;
 
-    yak_rect.x = (GAME_RES_X - w) / 2;
-    yak_rect.y = (GAME_RES_Y - h) / 2;
-    yak_rect.w = w;
-    yak_rect.h = h;
+    sprite_init(&spr, SPR_PLAYER, TX_YAK_MAIN, NULL, NULL);
 
+    spr.dst_rect.x = (GAME_RES_X - spr.dst_rect.w) / 2;
+    spr.dst_rect.y = (GAME_RES_Y - spr.dst_rect.h) / 2;
+
+    sprite_index = engine_add_sprite(&spr);
+    if (sprite_index < 0) {
+        printf("Fatal: failed to add player sprite\n");
+        return (-1);
+    }
     reload_time = 0;
 
     return 0;
@@ -50,46 +58,58 @@ int player_load(void)
 
 void player_unload(void)
 {
-    /* TODO */
+    engine_remove_sprite_i(sprite_index);
+    sprite_index = 0;
 }
 
-void player_update(unsigned dt)
+void player_update(struct sprite* spr, unsigned dt)
 {
-    const int max_x = (signed)GAME_RES_X - yak_rect.w;
-    const int max_y = (signed)GAME_RES_Y - yak_rect.h;
+    SDL_Rect* rect = &(spr->dst_rect);
+    const int max_x = (signed)GAME_RES_X - (rect->w);
+    const int max_y = (signed)GAME_RES_Y - (rect->h);
 
     if (reload_time > 0) {
         reload_time -= dt;
-        if (reload_time < 0) {
-            reload_time = 0;
-        }
     }
 
-    if (control_pressed(CKEY_LEFT) && (yak_rect.x > 0)) {
-        yak_rect.x--;
+    if (reload_time < 0) {
+        reload_time = 0;
     }
 
-    if (control_pressed(CKEY_RIGHT) && (yak_rect.x < max_x)) {
-        yak_rect.x++;
+    if (control_pressed(CKEY_LEFT) && (rect->x > 0)) {
+        rect->x--;
     }
 
-    if (control_pressed(CKEY_UP) && (yak_rect.y > 0)) {
-        yak_rect.y--;
+    if (control_pressed(CKEY_RIGHT) && (rect->x < max_x)) {
+        rect->x++;
     }
 
-    if (control_pressed(CKEY_DOWN) && (yak_rect.y < max_y)) {
-        yak_rect.y++;
+    if (control_pressed(CKEY_UP) && (rect->y > 0)) {
+        rect->y--;
+    }
+
+    if (control_pressed(CKEY_DOWN) && (rect->y < max_y)) {
+        rect->y++;
     }
 
     if (control_pressed(CKEY_FIRE) && !reload_time) {
-        /* TODO */
+        player_fire(rect);
         reload_time = RELOAD_TIMEOUT;
     }
 }
 
-void player_render(SDL_Renderer* rr)
+void player_fire(const SDL_Rect* rect)
 {
-    SDL_RenderCopy(rr, textures_get(TX_YAK_MAIN), NULL, &yak_rect);
+    struct sprite spr;
+    sprite_init(&spr, SPR_BULLET_PLR, TX_BULLET, NULL, NULL);
+
+    spr.dst_rect.x = rect->x;
+    spr.dst_rect.y = rect->y;
+    engine_add_sprite(&spr);
+
+    spr.dst_rect.x = rect->x + rect->w - spr.dst_rect.w;
+    spr.dst_rect.y = rect->y;
+    engine_add_sprite(&spr);
 }
 
 /* EOF */

@@ -22,16 +22,26 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
+#ifndef YF_ENGINE_H
+#define YF_ENGINE_H
 
 #include "sprite.h"
 #include <SDL2/SDL_render.h>
 
-int player_load(void);
+void engine_init(void);
 
-void player_unload(void);
+void engine_shutdown(void);
 
-void player_update(struct sprite* spr, unsigned dt);
+int engine_add_sprite(const struct sprite* spr);
 
-#endif /* YF_PLAYER_H */
+void engine_set_sprite(int i, const struct sprite* spr);
+
+void engine_remove_sprite(struct sprite* spr);
+
+void engine_remove_sprite_i(int i);
+
+void engine_update(unsigned dt);
+
+void engine_render(SDL_Renderer* rr);
+
+#endif /* YF_ENGINE_H */

@@ -22,16 +22,35 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
-
 #include "sprite.h"
-#include <SDL2/SDL_render.h>
+#include "textures.h"
 
-int player_load(void);
+void sprite_init(struct sprite* spr,
+                 enum sprite_type type,
+                 enum texture_id tx_id,
+                 const SDL_Rect* src_rect,
+                 const SDL_Rect* dst_rect)
+{
+    spr->type = type;
+    spr->tx_id = tx_id;
 
-void player_unload(void);
+    if (src_rect) {
+        spr->src_rect = *src_rect;
+    } else {
+        spr->src_rect.x = 0;
+        spr->src_rect.y = 0;
+        spr->src_rect.w = textures_get_width(tx_id);
+        spr->src_rect.h = textures_get_height(tx_id);
+    }
 
-void player_update(struct sprite* spr, unsigned dt);
+    if (dst_rect) {
+        spr->dst_rect = *dst_rect;
+    } else {
+        spr->dst_rect.x = 0;
+        spr->dst_rect.y = 0;
+        spr->dst_rect.w = textures_get_width(tx_id);
+        spr->dst_rect.h = textures_get_height(tx_id);
+    }
+}
 
-#endif /* YF_PLAYER_H */
+/* EOF */

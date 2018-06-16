@@ -23,6 +23,7 @@
  */
 
 #include "control.h"
+#include "engine.h"
 #include "game.h"
 #include "level.h"
 #include "player.h"
@@ -108,6 +109,8 @@ int game_init(int argc, char** argv)
         return error;
     }
 
+    engine_init();
+
     error = level_load();
     if (error) {
         printf("Fatal: failed to load game level\n");
@@ -138,6 +141,7 @@ void game_shutdown(void)
 
     player_unload();
     level_unload();
+    engine_shutdown();
     textures_unload();
 
     if (main_renderer) {
@@ -200,7 +204,7 @@ void update(void)
     const unsigned dt = SDL_GetTicks() - last_update_ticks;
 
     level_update(dt);
-    player_update(dt);
+    engine_update(dt);
     last_update_ticks = SDL_GetTicks();
 }
 
@@ -208,7 +212,7 @@ void render(void)
 {
     SDL_RenderClear(main_renderer);
     level_render(main_renderer);
-    player_render(main_renderer);
+    engine_render(main_renderer);
     SDL_RenderPresent(main_renderer);
 }
 

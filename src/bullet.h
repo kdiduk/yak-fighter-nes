@@ -22,16 +22,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
+#ifndef YF_BULLET_H
+#define YF_BULLET_H
 
 #include "sprite.h"
-#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_rect.h>
 
-int player_load(void);
+void bullet_fire(const SDL_Rect* rect);
 
-void player_unload(void);
+void bullet_update(struct sprite* spr, unsigned dt);
 
-void player_update(struct sprite* spr, unsigned dt);
-
-#endif /* YF_PLAYER_H */
+#endif /* YF_BULLET_H */

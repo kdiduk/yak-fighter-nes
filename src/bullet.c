@@ -22,16 +22,30 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
+#include "bullet.h"
+#include "engine.h"
+#include "textures.h"
 
-#include "sprite.h"
-#include <SDL2/SDL_render.h>
+void bullet_fire(const SDL_Rect* rect)
+{
+    struct sprite spr;
+    sprite_init(&spr, SPR_BULLET_PLR, TX_BULLET, NULL, NULL);
 
-int player_load(void);
+    spr.dst_rect.x = rect->x;
+    spr.dst_rect.y = rect->y;
+    engine_add_sprite(&spr);
 
-void player_unload(void);
+    spr.dst_rect.x = rect->x + rect->w - spr.dst_rect.w;
+    spr.dst_rect.y = rect->y;
+    engine_add_sprite(&spr);
+}
 
-void player_update(struct sprite* spr, unsigned dt);
+void bullet_update(struct sprite* spr, unsigned dt)
+{
+    (void) dt;
 
-#endif /* YF_PLAYER_H */
+    spr->dst_rect.y -= 2;
+    if (spr->dst_rect.y < 0) {
+        engine_remove_sprite(spr);
+    }
+}

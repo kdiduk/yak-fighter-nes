@@ -22,16 +22,32 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef YF_PLAYER_H
-#define YF_PLAYER_H
+#ifndef YF_SPRITE_H
+#define YF_SPRITE_H
 
-#include "sprite.h"
-#include <SDL2/SDL_render.h>
+#include "textures.h"
+#include <SDL2/SDL_rect.h>
 
-int player_load(void);
+enum sprite_type {
+    SPR_NONE = 0,
+    SPR_PLAYER,
+    SPR_ENEMY,
+    SPR_BULLET_PLR,
+    SPR_BULLET_ENM,
+    SPR_POWERUP
+};
 
-void player_unload(void);
+struct sprite {
+    enum sprite_type    type;
+    enum texture_id     tx_id;
+    SDL_Rect            src_rect;
+    SDL_Rect            dst_rect;
+};
 
-void player_update(struct sprite* spr, unsigned dt);
+void sprite_init(struct sprite* spr,
+                 enum sprite_type type,
+                 enum texture_id tx_id,
+                 const SDL_Rect* src_rect,
+                 const SDL_Rect* dst_rect);
 
-#endif /* YF_PLAYER_H */
+#endif /* YF_SPRITE_H */
