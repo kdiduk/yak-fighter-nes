@@ -28,7 +28,10 @@
 #include "textures.h"
 #include <SDL2/SDL_rect.h>
 
+#define RELOAD_TIMEOUT (200u)
+
 static SDL_Rect yak_rect;
+static unsigned reload_time = 0;
 
 int player_load(void)
 {
@@ -39,6 +42,8 @@ int player_load(void)
     yak_rect.y = (GAME_RES_Y - h) / 2;
     yak_rect.w = w;
     yak_rect.h = h;
+
+    reload_time = 0;
 
     return 0;
 }
@@ -53,7 +58,12 @@ void player_update(unsigned dt)
     const int max_x = (signed)GAME_RES_X - yak_rect.w;
     const int max_y = (signed)GAME_RES_Y - yak_rect.h;
 
-    (void) dt;
+    if (reload_time > 0) {
+        reload_time -= dt;
+        if (reload_time < 0) {
+            reload_time = 0;
+        }
+    }
 
     if (control_pressed(CKEY_LEFT) && (yak_rect.x > 0)) {
         yak_rect.x--;
@@ -69,6 +79,11 @@ void player_update(unsigned dt)
 
     if (control_pressed(CKEY_DOWN) && (yak_rect.y < max_y)) {
         yak_rect.y++;
+    }
+
+    if (control_pressed(CKEY_FIRE) && !reload_time) {
+        /* TODO */
+        reload_time = RELOAD_TIMEOUT;
     }
 }
 
