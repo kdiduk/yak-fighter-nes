@@ -1,0 +1,16 @@
+TODO (bugs):
+
+- flickering
+
+
+TODO (ideas):
+
+- live/HP
+- propeller animation
+- shadows
+- birds
+- scores counting
+- main menu screen
+- game over screen
+
+# eof
