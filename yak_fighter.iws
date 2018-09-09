@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4c185412-8a27-4080-ac93-0c6b060d4e38" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/data/bullet.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/level_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/messer_main.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/yak_main.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yak_fighter.iws" beforeDir="false" afterPath="$PROJECT_DIR$/yak_fighter.iws" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -63,33 +61,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DesktopLauncher.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/desktop/src/com/kdiduk/game/desktop/DesktopLauncher.java">
+      <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+            <state relative-caret-position="187">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3094#3095#0" expanded="true" />
+                <element signature="e#3127#3128#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Game.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
+      <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
+            <state relative-caret-position="102">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1453#1454#0" expanded="true" />
-                <element signature="e#1474#1475#0" expanded="true" />
+                <element signature="e#1449#1450#0" expanded="true" />
+                <element signature="e#1483#1484#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -98,6 +105,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/desktop/src/com/kdiduk/game/desktop/DesktopLauncher.java" />
+        <option value="$PROJECT_DIR$/core/src/com/kdiduk/game/Player.java" />
         <option value="$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java" />
       </list>
     </option>
@@ -106,10 +114,11 @@
     <option name="LAST_EDITED_MODULE_NAME" />
     <option name="LAST_EDITED_TAB_NAME" />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="245" />
-    <option name="width" value="1121" />
-    <option name="height" value="712" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="80" />
+    <option name="y" value="37" />
+    <option name="width" value="1166" />
+    <option name="height" value="702" />
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
@@ -119,6 +128,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -126,13 +137,53 @@
               <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
               <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="desktop" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="desktop" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="yak_fighter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="yak-fighter" type="462c0819:PsiDirectoryNode" />
+              <item name="desktop" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="desktop" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -244,7 +295,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="245" y="0" width="1121" height="712" extended-state="0" />
+    <frame x="-1" y="0" width="1368" height="769" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="5" />
       <window_info anchor="bottom" id="TODO" order="10" />
@@ -254,19 +305,19 @@
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="4" />
-      <window_info anchor="bottom" id="Run" order="6" weight="0.26229507" />
       <window_info anchor="bottom" id="Version Control" order="2" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.2353823" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="0" />
-      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.2663092" />
+      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.22620791" />
       <window_info anchor="right" id="Gradle" order="1" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="7" weight="0.25" />
       <window_info id="UI Designer" order="1" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="6" type="SLIDING" weight="0.4" />
@@ -282,7 +333,82 @@
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="3" />
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1598">
+          <caret line="94" column="28" selection-start-line="94" selection-start-column="28" selection-end-line="94" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1449#1450#0" expanded="true" />
+            <element signature="e#1483#1484#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1598">
+          <caret line="94" column="28" lean-forward="true" selection-start-line="94" selection-start-column="28" selection-end-line="94" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1449#1450#0" expanded="true" />
+            <element signature="e#1483#1484#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/desktop/src/com/kdiduk/game/desktop/DesktopLauncher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1513">
+          <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/desktop/src/com/kdiduk/game/desktop/DesktopLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -299,8 +425,8 @@
           <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1453#1454#0" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -321,8 +447,8 @@
           <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1453#1454#0" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -343,8 +469,8 @@
           <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1453#1454#0" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -360,10 +486,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2214">
           <caret line="509" column="16" selection-start-line="509" selection-start-column="16" selection-end-line="509" selection-end-column="16" />
-          <folding>
-            <element signature="e#14803#14804#0" expanded="true" />
-            <element signature="e#14870#14871#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -374,24 +496,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1453#1454#0" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/desktop/src/com/kdiduk/game/desktop/DesktopLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1449#1450#0" expanded="true" />
+            <element signature="e#1483#1484#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/kdiduk/game/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3094#3095#0" expanded="true" />
+            <element signature="e#3127#3128#0" expanded="true" />
           </folding>
         </state>
       </provider>
