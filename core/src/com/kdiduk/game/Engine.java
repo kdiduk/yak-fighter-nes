@@ -9,9 +9,10 @@ import java.util.ListIterator;
 public class Engine {
 
 	LinkedList<Sprite> sprites = new LinkedList<Sprite>();
+	LinkedList<Sprite> newSprites = new LinkedList<Sprite>();
 
 	public void addSprite(Sprite s) {
-		sprites.add(s);
+		newSprites.add(s);
 	}
 
 	public void update(int frameCount) {
@@ -24,6 +25,9 @@ public class Engine {
 				it.remove();
 			}
 		}
+
+		sprites.addAll(newSprites);
+		newSprites.clear();
 	}
 
 	public void render(SpriteBatch batch) {

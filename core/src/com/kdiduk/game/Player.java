@@ -6,47 +6,51 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player implements Sprite {
-
-	protected Game mGame = null;
-	protected Texture mTexture = null;
-	private int mPosX = 0;
-	private int mPosY = 0;
+	protected static final Integer RELOADING_FRAMES = 40;
+	protected static final Integer POS_X_DELTA = 5;
+	protected static final Integer POS_Y_DELTA = 8;
+	protected Game game = null;
+	protected Texture texture = null;
+	protected Integer posX = 0;
+	protected Integer posY = 0;
+	protected Integer reloading = 0;
 
 	public Player(Game game) {
-		mGame = game;
-		mTexture = new Texture(Gdx.files.internal("yak_main.png"));
-		mPosX = (Game.SCREEN_WIDTH - mTexture.getWidth()) / 2;
-		mPosY = (Game.SCREEN_HEIGHT - mTexture.getHeight()) / 2;
+		this.game = game;
+		texture = new Texture(Gdx.files.internal("yak_main.png"));
+		posX = (Game.SCREEN_WIDTH - texture.getWidth()) / 2;
+		posY = (Game.SCREEN_HEIGHT - texture.getHeight()) / 2;
 	}
 
 	@Override
 	public boolean update(int frameCount) {
-		if (frameCount % 2 == 0) {
-			return true;
+		if (reloading > 0) {
+			reloading--;
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			if (mPosX > 0) {
-				mPosX--;
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && (frameCount % 2 == 0)) {
+			if (posX > 0) {
+				posX--;
 			}
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			if (mPosX < Game.SCREEN_WIDTH - mTexture.getWidth()) {
-				mPosX++;
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && (frameCount % 2 == 0)) {
+			if (posX < Game.SCREEN_WIDTH - texture.getWidth()) {
+				posX++;
 			}
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (mPosY > 0) {
-				mPosY--;
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && (frameCount % 2 == 0)) {
+			if (posY > 0) {
+				posY--;
 			}
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			if (mPosY < Game.SCREEN_HEIGHT - mTexture.getHeight()) {
-				mPosY++;
+		if (Gdx.input.isKeyPressed(Input.Keys.UP) && (frameCount % 2 == 0)) {
+			if (posY < Game.SCREEN_HEIGHT - texture.getHeight()) {
+				posY++;
 			}
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			/* TOOD: Fire */
+
+		if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && reloading == 0) {
+			fire();
 		}
 
 		return true;
@@ -54,14 +58,25 @@ public class Player implements Sprite {
 
 	@Override
 	public void render(SpriteBatch spriteBatch) {
-		spriteBatch.draw(mTexture, mPosX, mPosY);
+		spriteBatch.draw(texture, posX, posY);
 	}
 
 	@Override
 	public void dispose() {
-		if (mTexture != null) {
-			mTexture.dispose();
+		if (texture != null) {
+			texture.dispose();
 		}
+	}
+
+	protected void fire() {
+		int y = posY + texture.getHeight() - POS_Y_DELTA;
+		int x = posX + POS_X_DELTA;
+		game.getEngine().addSprite(new Bullet(game, x, y));
+
+		x = posX + texture.getWidth() - POS_X_DELTA;
+		game.getEngine().addSprite(new Bullet(game, x, y));
+
+		reloading = RELOADING_FRAMES;
 	}
 }
 
