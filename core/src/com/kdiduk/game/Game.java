@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -17,6 +16,7 @@ public class Game extends ApplicationAdapter {
 	private Viewport viewport = null;
 	private OrthographicCamera camera = null;
 	private SpriteBatch spriteBatch;
+	private TextureManager textureManager = null;
 	private Engine engine = null;
 	private Level level = null;
 	private Player player = null;
@@ -30,6 +30,7 @@ public class Game extends ApplicationAdapter {
 		viewport.setScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		spriteBatch = new SpriteBatch();
+		textureManager = new TextureManager();
 		engine = new Engine();
 		level = new Level(this);
 		player = new Player(this);
@@ -43,6 +44,10 @@ public class Game extends ApplicationAdapter {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public TextureManager getTextureManager() {
+		return textureManager;
 	}
 
 	@Override
@@ -76,6 +81,7 @@ public class Game extends ApplicationAdapter {
 		spriteBatch.dispose();
 		level.dispose();
 		engine.dispose();
+		textureManager.dispose();
 	}
 }
 

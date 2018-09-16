@@ -23,7 +23,7 @@ public class Level {
             scroll++;
         }
 
-        if (scroll >= texture.getHeight()) {
+        if (scroll >= texture.getHeight() - Game.SCREEN_HEIGHT) {
             return false;
         }
 

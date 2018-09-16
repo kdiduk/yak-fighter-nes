@@ -1,40 +1,32 @@
 package com.kdiduk.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+public class Enemy extends Sprite {
 
-public class Enemy implements Sprite {
-    protected Game game = null;
-    protected Texture texture = null;
-    protected int posX = 0;
-    protected int posY = 0;
+    int hp = 0;
 
-    public Enemy(Game g, int x) {
-        game = g;
-        texture = new Texture(Gdx.files.internal("messer_main.png"));
-        posX = x;
-        posY = Game.SCREEN_HEIGHT;
+    public Enemy(Game game, int x) {
+        super(game, SpriteType.ENEMY, TextureId.MESSER_MAIN);
+        setPos(x, Game.SCREEN_HEIGHT);
+        hp = 2;
     }
 
     @Override
     public boolean update(int frames) {
-        posY--;
+        if (hp <= 0) {
+            return false;
+        }
 
-        if (posY + texture.getHeight() <= 0) {
+        movePos(0, -1);
+
+        if (getPosY() + getHeight() <= 0) {
             return false;
         }
 
         return true;
     }
-
     @Override
-    public void render(SpriteBatch batch) {
-        batch.draw(texture, posX, posY);
+    public void damage(int pt) {
+        hp -= pt;
     }
 
-    @Override
-    public void dispose() {
-        texture.dispose();
-    }
 }
