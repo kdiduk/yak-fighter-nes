@@ -15,8 +15,8 @@ public class Player implements Sprite {
 	protected Integer posY = 0;
 	protected Integer reloading = 0;
 
-	public Player(Game game) {
-		this.game = game;
+	public Player(Game g) {
+		game = g;
 		texture = new Texture(Gdx.files.internal("yak_main.png"));
 		posX = (Game.SCREEN_WIDTH - texture.getWidth()) / 2;
 		posY = (Game.SCREEN_HEIGHT - texture.getHeight()) / 2;

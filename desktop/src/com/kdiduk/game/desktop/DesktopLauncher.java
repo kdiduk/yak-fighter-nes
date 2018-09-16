@@ -6,7 +6,7 @@ import com.kdiduk.game.Game;
 
 public class DesktopLauncher {
     public static final String GAME_TITLE = "Yak Fighter!";
-    public static final int GAME_WIDTH = 960;
+    public static final int GAME_WIDTH = 1080;
     public static final int GAME_HEIGHT = 720;
 
 	public static void main (String[] arg) {
