@@ -41,6 +41,10 @@ public class Game extends ApplicationAdapter {
 		return engine;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
