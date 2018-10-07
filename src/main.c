@@ -26,11 +26,13 @@
 
 #include <stdint.h>
 #include "neslib.h"
+#include "system.h"
 
 
 //general purpose vars
 static uint8_t i,j;
 static uint8_t spr;
+static uint16_t xscr, yscr;
 static uint16_t addr;
 
 // total number of balls on the screen
@@ -85,14 +87,22 @@ void main(void)
         vram_write(nametable_row, sizeof(nametable_row));
         addr += sizeof(nametable_row);
     }
-    
     vram_adr(addr);
     vram_write(nametable_attr, 8);
-    
+
+    addr = NAMETABLE_C;
+    for (i = 0; i < 15; ++i)
+    {
+        vram_adr(addr);
+        vram_write(nametable_row, sizeof(nametable_row));
+        addr += sizeof(nametable_row);
+    }
+    vram_adr(addr);
+    vram_write(nametable_attr, 8);
+
     ppu_on_all();//enable rendering
 
     //initialize balls parameters
-
     for(i=0; i<BALLS_MAX; ++i)
     {
         // starting coordinates
@@ -112,12 +122,30 @@ void main(void)
     }
 
     // now the main loop
+    yscr = 240;
+    xscr = 0;
     while (1)
     {
-        ppu_wait_frame(); //wait for next TV frame
+        j = frame_count();
+        if (j % 2)
+        {
+            --yscr;
+            if (yscr == 0)
+            {
+                yscr = 240;
+            }
+        }
+        if (j % 25 == 0)
+        {
+            ++xscr;
+            if (xscr == 240)
+            {
+                xscr = 0;
+            }
+        }
 
-        spr=0;
-
+        spr = 0;
+        ppu_wait_nmi();
         for (i=0; i<BALLS_MAX; ++i)
         {
             //set a sprite for current ball
@@ -139,6 +167,8 @@ void main(void)
                 ball_dy[i] =- ball_dy[i];
             }
         }
+
+        scroll(xscr, yscr);
     }
 }
 
