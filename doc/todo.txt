@@ -1,0 +1,2 @@
+- neslib.s and famitone2.s: compile separalely from startup.s, and link (not include)
+
