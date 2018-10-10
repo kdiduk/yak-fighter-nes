@@ -24,11 +24,17 @@
  *
  * ************************************************************************* */
 
-#ifndef YF_SYSTEM_H
-#define YF_SYSTEM_H
+#ifndef YF_LEVEL_H
+#define YF_LEVEL_H
 
+#include "neslib.h"
 #include <stdint.h>
 
-uint16_t fastcall frame_count(void);
 
-#endif /* YF_SYSTEM_H */
+void fastcall level_load(void);
+
+void fastcall level_update(uint8_t frames);
+
+void fastcall level_render(void);
+
+#endif /* YF_LEVEL_H */

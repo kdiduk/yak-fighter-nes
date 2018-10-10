@@ -1,19 +1,19 @@
 /* ****************************************************************************
  *
  * MIT License
- * 
+ *
  * Copyright (c) 2018 Kirill Diduk
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
  * deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,16 +24,15 @@
  *
  * ************************************************************************* */
 
-#include <stdint.h>
+#include "level.h"
 #include "neslib.h"
 #include "system.h"
+#include <stdint.h>
 
 
 //general purpose vars
 static uint8_t i,j;
 static uint8_t spr;
-static uint16_t xscr, yscr;
-static uint16_t addr;
 
 // total number of balls on the screen
 // since there are 64 HW sprites, it is absolute max
@@ -45,12 +44,6 @@ static uint8_t ball_y[BALLS_MAX];
 static uint8_t ball_dx[BALLS_MAX];
 static uint8_t ball_dy[BALLS_MAX];
 
-const uint8_t bg_palette[] = {
-    0x02, 0x12, 0x22, 0x32,
-    0x22, 0x36, 0x17, 0x0F,
-    0x22, 0x30, 0x21, 0x0F,
-    0x22, 0x27, 0x17, 0x0F
-};
 
 // palette for balls, there are four sets for different ball colors
 const uint8_t sp_palette[16]={
@@ -60,46 +53,11 @@ const uint8_t sp_palette[16]={
     0x0f,0x19,0x29,0x39
 };
 
-
-const uint8_t nametable_row[64] = {
-    0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,
-    0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,
-
-    0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,
-    0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11,0x10,0x11
-};
-
-const uint8_t nametable_attr[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-
 void main(void)
 {
     ppu_off();
-    pal_bg(bg_palette);
-    pal_spr(sp_palette);//set palette for sprites
-
-    bank_bg(1);
-    addr = NAMETABLE_A;
-    for (i = 0; i < 15; ++i)
-    {
-        vram_adr(addr);
-        vram_write(nametable_row, sizeof(nametable_row));
-        addr += sizeof(nametable_row);
-    }
-    vram_adr(addr);
-    vram_write(nametable_attr, 8);
-
-    addr = NAMETABLE_C;
-    for (i = 0; i < 15; ++i)
-    {
-        vram_adr(addr);
-        vram_write(nametable_row, sizeof(nametable_row));
-        addr += sizeof(nametable_row);
-    }
-    vram_adr(addr);
-    vram_write(nametable_attr, 8);
-
+    level_load();
+    pal_spr(sp_palette);
     ppu_on_all();//enable rendering
 
     //initialize balls parameters
@@ -122,30 +80,12 @@ void main(void)
     }
 
     // now the main loop
-    yscr = 240;
-    xscr = 0;
     while (1)
     {
-        j = frame_count();
-        if (j % 2)
-        {
-            --yscr;
-            if (yscr == 0)
-            {
-                yscr = 240;
-            }
-        }
-        if (j % 25 == 0)
-        {
-            ++xscr;
-            if (xscr == 240)
-            {
-                xscr = 0;
-            }
-        }
-
+        level_update(frame_count());
         spr = 0;
         ppu_wait_nmi();
+        level_render();
         for (i=0; i<BALLS_MAX; ++i)
         {
             //set a sprite for current ball
@@ -167,8 +107,6 @@ void main(void)
                 ball_dy[i] =- ball_dy[i];
             }
         }
-
-        scroll(xscr, yscr);
     }
 }
 
