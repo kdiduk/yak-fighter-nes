@@ -25,14 +25,10 @@
  * ************************************************************************* */
 
 #include "level.h"
-#include "neslib.h"
-#include "system.h"
 #include <stdint.h>
 
 /* ************************************************************************* */
 
-#define MAX_SCROLL_X (256)
-#define MAX_SCROLL_Y (240)
 #define NAMETABLE_SIZE (960)
 #define NAMETABLE_ROW_SIZE (64)
 #define ATTRTABLE_SIZE (64)
@@ -56,12 +52,13 @@ const uint8_t nametable_row[NAMETABLE_ROW_SIZE] = {
 
 const uint8_t attribute_table[ATTRTABLE_SIZE] = { 0x00 };
 
+
 /* ************************************************************************** */
 
-static uint16_t scroll_x;
-static uint16_t scroll_y;
 static uint8_t i;
 static uint16_t ptr;
+
+void fastcall level_load_scroll(void);
 
 /* ************************************************************************** */
 
@@ -90,35 +87,7 @@ void fastcall level_load(void)
     vram_adr(NAMETABLE_C + NAMETABLE_SIZE);
     vram_write(attribute_table, ATTRTABLE_SIZE);
 
-    scroll_x = 0;
-    scroll_y = (2 * MAX_SCROLL_Y) - 1;
-}
-
-
-void fastcall level_update(uint8_t frames)
-{
-    if (frames % 2)
-    {
-        if (scroll_y > 0)
-        {
-            scroll_y--;
-        }
-        else
-        {
-            scroll_y = (2 * MAX_SCROLL_Y) - 1;
-        }
-    }
-
-    if (frames % 25 == 0)
-    {
-        ++scroll_x;
-        if (scroll_x >= 2 * MAX_SCROLL_X)
-        {
-            scroll_x = 0;
-        }
-    }
-
-    scroll(scroll_x, scroll_y);
+    level_load_scroll();
 }
 
 void fastcall level_render(void)

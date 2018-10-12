@@ -24,12 +24,22 @@
 ;
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    .export _frame_count
-    .importzp FRAME_CNT1
+; Assembly include file that contains constantd for NES PPU registers.
+;
+; Author: Kirill Diduk
+; Created on 12 October, 2018.
+; Barcelona, Spain
 
-_frame_count:
-    LDA FRAME_CNT1
-    LDX #0
-    RTS
+PPU_CTRL        = $2000
+PPU_MASK        = $2001
+PPU_STATUS      = $2002
+PPU_OAM_ADDR    = $2003
+PPU_OAM_DATA    = $2004
+PPU_SCROLL      = $2005
+PPU_ADDR        = $2006
+PPU_DATA        = $2007
+PPU_OAM_DMA     = $4014
+PPU_FRAMECNT    = $4017
+DMC_FREQ        = $4010
 
-; end of file
+; enf of file

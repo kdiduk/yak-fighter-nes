@@ -26,7 +26,6 @@
 
 #include "level.h"
 #include "neslib.h"
-#include "system.h"
 #include <stdint.h>
 
 
@@ -58,7 +57,7 @@ void main(void)
     ppu_off();
     level_load();
     pal_spr(sp_palette);
-    ppu_on_all();//enable rendering
+    ppu_on_all(); //enable rendering
 
     //initialize balls parameters
     for(i=0; i<BALLS_MAX; ++i)
@@ -80,32 +79,41 @@ void main(void)
     }
 
     // now the main loop
+    j = 0;
+    spr = 0;
     while (1)
     {
-        level_update(frame_count());
-        spr = 0;
+        level_update();
+
         ppu_wait_nmi();
         level_render();
-        for (i=0; i<BALLS_MAX; ++i)
+
+        for (i=0; i<(BALLS_MAX/2); ++i, ++j)
         {
             //set a sprite for current ball
             //0x40 is tile number, i&3 is palette
-            spr = oam_spr(ball_x[i], ball_y[i], 0x75, i&3, spr);
+            spr = oam_spr(ball_x[j], ball_y[j], 0x75, j&3, spr);
 
             //move the ball
-            ball_x[i] += ball_dx[i];
-            ball_y[i] += ball_dy[i];
+            ball_x[j] += ball_dx[j];
+            ball_y[j] += ball_dy[j];
 
             //bounce the ball off the edges
-            if (ball_x[i] >= (256-8))
+            if (ball_x[j] >= (256-8))
             {
-                ball_dx[i] =- ball_dx[i];
+                ball_dx[j] =- ball_dx[j];
             }
 
-            if (ball_y[i] >= (240-8))
+            if (ball_y[j] >= (240-8))
             {
-                ball_dy[i] =- ball_dy[i];
+                ball_dy[j] =- ball_dy[j];
             }
+        }
+
+        if (j >= BALLS_MAX)
+        {
+            j = 0;
+            spr = 0;
         }
     }
 }

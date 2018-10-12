@@ -33,7 +33,7 @@
 
 void fastcall level_load(void);
 
-void fastcall level_update(uint8_t frames);
+void fastcall level_update(void);
 
 void fastcall level_render(void);
 

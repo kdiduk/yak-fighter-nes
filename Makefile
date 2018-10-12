@@ -53,7 +53,7 @@ ROMCFG = cartridge.cfg
 TARGET = yak-fighter.nes
 LABELS = labels.txt
 
-OBJECTS = $(addprefix $(OBJDIR)/, level.o main.o startup.o system.o)
+OBJECTS = $(addprefix $(OBJDIR)/, level.c.o main.c.o level.o startup.o)
 LIBS = nes.lib
 
 AS = ca65
@@ -77,7 +77,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 	$(LD) -C $(ROMCFG) $(OBJECTS) $(LIBS) -Ln $(OBJDIR)/$(LABELS) -o $@
 
 # Compiling C files into Assembly files
-$(OBJDIR)/%.s: %.c
+$(OBJDIR)/%.c.s: %.c
 	$(CC) $(CFLAGS) $< -o $@
 
 # Assembly files created from C files by the previous rule (above)

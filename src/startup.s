@@ -21,7 +21,8 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
 ;this called the CONDES function
 
     .export _exit,__STARTUP__:absolute=1
-    .exportzp FRAME_CNT1
+    .exportzp FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
+    .exportzp PPU_CTRL_VAR, PPU_MASK_VAR
     .import push0,popa,popax,_main,zerobss,copydata
 
 ; Linker generated symbols
@@ -34,23 +35,9 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
 
     .importzp _PAD_STATE, _PAD_STATET ;added
     .include "zeropage.inc"
+    .include "ppu.s"
 
 
-
-
-
-
-PPU_CTRL    =$2000
-PPU_MASK    =$2001
-PPU_STATUS  =$2002
-PPU_OAM_ADDR=$2003
-PPU_OAM_DATA=$2004
-PPU_SCROLL  =$2005
-PPU_ADDR    =$2006
-PPU_DATA    =$2007
-PPU_OAM_DMA =$4014
-PPU_FRAMECNT=$4017
-DMC_FREQ    =$4010
 CTRL_PORT1  =$4016
 CTRL_PORT2  =$4017
 
