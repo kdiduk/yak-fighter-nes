@@ -53,7 +53,7 @@ ROMCFG = cartridge.cfg
 TARGET = yak-fighter.nes
 LABELS = labels.txt
 
-OBJECTS = $(addprefix $(OBJDIR)/, level.c.o main.c.o level.o startup.o)
+OBJECTS = $(addprefix $(OBJDIR)/, level.c.o main.c.o player.c.o level.o startup.o)
 LIBS = nes.lib
 
 AS = ca65

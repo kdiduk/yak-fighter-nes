@@ -24,28 +24,60 @@
  *
  * ************************************************************************* */
 
-#include "level.h"
+/**
+ * Create on: 13 October, 2018.
+ * Barcelona, Spain
+ */
+
 #include "neslib.h"
 #include "player.h"
+#include <stdint.h>
 
 
-void main(void)
+const uint8_t spr_palette_data[]={
+    0x0F, 0x0A, 0x1A, 0x0D,
+    0x0F, 0x0A, 0x1A, 0x02,
+    0x0F, 0x15, 0x25, 0x35,
+    0x0f, 0x19, 0x29, 0x39
+};
+
+
+static uint8_t pos_x = 0;
+static uint8_t pos_y = 0;
+
+static uint8_t i;
+static uint8_t j;
+static uint8_t sprite;
+
+
+void fastcall player_init(void)
 {
-    ppu_off();
-    level_load();
-    player_init();
-    ppu_on_all();
+    pal_spr(spr_palette_data);
+    bank_spr(0);
+    oam_size(0);
+    pos_x = 100;
+    pos_y = 100;
+}
 
-    while (1)
+void fastcall player_update(void)
+{
+
+}
+
+void fastcall player_render(void)
+{
+    sprite = 4;
+    for (i = 0; i < 4; ++i)
     {
-        level_update();
-        player_update();
-
-        ppu_wait_nmi();
-
-        level_render();
-        player_render();
+        for (j = 0; j < 4; ++j)
+        {
+            sprite = oam_spr(pos_x + (j << 3),
+                             pos_y + (i << 3),
+                             (i << 4) + j,
+                             ((i == 1) && (j == 1 || j == 2)),
+                             sprite);
+        }
     }
 }
 
-/* eof */
+/* EOF */

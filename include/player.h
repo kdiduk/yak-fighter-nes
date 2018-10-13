@@ -24,28 +24,18 @@
  *
  * ************************************************************************* */
 
-#include "level.h"
-#include "neslib.h"
-#include "player.h"
+/**
+ * Create on: 13 October, 2018.
+ * Barcelona, Spain
+ */
 
+#ifndef YF_PLAYER_H
+#define YF_PLAYER_H
 
-void main(void)
-{
-    ppu_off();
-    level_load();
-    player_init();
-    ppu_on_all();
+void fastcall player_init(void);
 
-    while (1)
-    {
-        level_update();
-        player_update();
+void fastcall player_update(void);
 
-        ppu_wait_nmi();
+void fastcall player_render(void);
 
-        level_render();
-        player_render();
-    }
-}
-
-/* eof */
+#endif /* YF_PLAYER_H */
