@@ -47,13 +47,19 @@ INCDIR = include
 DATDIR = data
 
 # Keep intermediate assembly files, generated when compiling C files
-.PRECIOUS: $(OBJDIR)/%.s
+.PRECIOUS: $(OBJDIR)/%.c.s
 
 ROMCFG = cartridge.cfg
 TARGET = yak-fighter.nes
 LABELS = labels.txt
 
-OBJECTS = $(addprefix $(OBJDIR)/, level.c.o main.c.o player.c.o level.o startup.o)
+OBJECTS = $(addprefix $(OBJDIR)/, \
+	level.c.o	\
+	main.c.o	\
+	player.c.o	\
+	gamepad.o	\
+	level.o		\
+	startup.o)
 LIBS = nes.lib
 
 AS = ca65

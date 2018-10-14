@@ -24,30 +24,23 @@
  *
  * ************************************************************************* */
 
-#include "gamepad.h"
-#include "level.h"
-#include "neslib.h"
-#include "player.h"
+#ifndef YF_GAMEPAD_H
+#define YF_GAMEPAD_H
+
+#include <stdint.h>
+
+#define GAMEPAD_A       (0x01 << 7)
+#define GAMEPAD_B       (0x01 << 6)
+#define GAMEPAD_SELECT  (0x01 << 5)
+#define GAMEPAD_START   (0x01 << 4)
+#define GAMEPAD_UP      (0x01 << 3)
+#define GAMEPAD_DOWN    (0x01 << 2)
+#define GAMEPAD_LEFT    (0x01 << 1)
+#define GAMEPAD_RIGHT   (0x01)
 
 
-void main(void)
-{
-    ppu_off();
-    level_load();
-    player_init();
-    ppu_on_all();
+void    fastcall gamepad_update(void);
+uint8_t fastcall gamepad_state(void);
 
-    while (1)
-    {
-        gamepad_update();
-        level_update();
-        player_update();
 
-        ppu_wait_nmi();
-
-        level_render();
-        player_render();
-    }
-}
-
-/* eof */
+#endif /* YF_GAMEPAD_H */

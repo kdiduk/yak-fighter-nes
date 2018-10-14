@@ -29,6 +29,7 @@
  * Barcelona, Spain
  */
 
+#include "gamepad.h"
 #include "neslib.h"
 #include "player.h"
 #include <stdint.h>
@@ -90,7 +91,26 @@ void fastcall player_init(void)
 
 void fastcall player_update(void)
 {
+    i = gamepad_state();
+    if ((i & GAMEPAD_LEFT) && pos_x > 0)
+    {
+        --pos_x;
+    }
 
+    if ((i & GAMEPAD_RIGHT) && ((pos_x + 32) < 256))
+    {
+        ++pos_x;
+    }
+
+    if ((i & GAMEPAD_UP) && (pos_y > 0))
+    {
+        --pos_y;
+    }
+
+    if ((i & GAMEPAD_DOWN) && ((pos_y + 32) < 240))
+    {
+        ++pos_y;
+    }
 }
 
 void fastcall player_render(void)
