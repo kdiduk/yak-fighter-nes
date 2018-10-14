@@ -33,6 +33,8 @@
 #include "player.h"
 #include <stdint.h>
 
+#define NUM_SPRITES (10)
+#define TILE_PX   (8)
 
 const uint8_t spr_palette_data[]={
     0x0F, 0x0A, 0x1A, 0x0D,
@@ -41,12 +43,39 @@ const uint8_t spr_palette_data[]={
     0x0f, 0x19, 0x29, 0x39
 };
 
+const uint8_t sprite_tiles[NUM_SPRITES] = {
+          0x01, 0x02,
+    0x10, 0x11, 0x12, 0x13,
+          0x21, 0x22,
+          0x31, 0x32
+};
+
+const uint8_t sprite_dx[NUM_SPRITES] = {
+        TILE_PX,    2*TILE_PX,
+    0,  TILE_PX,    2*TILE_PX,  3*TILE_PX,
+        TILE_PX,    2*TILE_PX,
+        TILE_PX,    2*TILE_PX
+};
+
+const uint8_t sprite_dy[NUM_SPRITES] = {
+                0,          0,
+    TILE_PX,    TILE_PX,    TILE_PX,    TILE_PX,
+                2*TILE_PX,  2*TILE_PX,
+                3*TILE_PX,  3*TILE_PX
+};
+
+const uint8_t sprite_attr[NUM_SPRITES] = {
+          0x00, 0x00,
+    0x00, 0x01, 0x01, 0x00,
+          0x00, 0x00,
+          0x00, 0x00
+};
+
 
 static uint8_t pos_x = 0;
 static uint8_t pos_y = 0;
 
 static uint8_t i;
-static uint8_t j;
 static uint8_t sprite;
 
 
@@ -67,16 +96,13 @@ void fastcall player_update(void)
 void fastcall player_render(void)
 {
     sprite = 4;
-    for (i = 0; i < 4; ++i)
+    for (i = 0; i < NUM_SPRITES; ++i)
     {
-        for (j = 0; j < 4; ++j)
-        {
-            sprite = oam_spr(pos_x + (j << 3),
-                             pos_y + (i << 3),
-                             (i << 4) + j,
-                             ((i == 1) && (j == 1 || j == 2)),
-                             sprite);
-        }
+        sprite = oam_spr(pos_x + sprite_dx[i],
+                         pos_y + sprite_dy[i],
+                         sprite_tiles[i],
+                         sprite_attr[i],
+                         sprite);
     }
 }
 
