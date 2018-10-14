@@ -1,2 +1,4 @@
-- neslib.s and famitone2.s: compile separalely from startup.s, and link (not include)
-
+- remove "famitone2.s" and it's usages (no sounds in the future releases)
+- "neslib.s": compile separalely from startup.s, and link (not include)
+- use 8x16 sprites
+- aircraft propeller animation
