@@ -24,6 +24,8 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
     .exportzp FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
     .exportzp PPU_CTRL_VAR, PPU_MASK_VAR
     .exportzp PAD_STATE
+    .exportzp VRAM_UPDATE
+    .export PAL_BUF
     .import push0,popa,popax,_main,zerobss,copydata
 
 ; Linker generated symbols
