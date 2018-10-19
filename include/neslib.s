@@ -46,59 +46,59 @@ nmi:
     lda #>OAM_BUF       ;update OAM
     sta PPU_OAM_DMA
 
-    lda <PAL_UPDATE     ;update palette if needed
-    bne @updPal
-    jmp @skipUpd
-
-@updPal:
-
-    ldx #0
-    stx <PAL_UPDATE
-
-    lda #$3f
-    sta PPU_ADDR
-    stx PPU_ADDR
-
-    ldy PAL_BUF             ;background color, remember it in X
-    lda (PAL_BG_PTR),y
-    sta PPU_DATA
-    tax
-
-    .repeat 3,I
-    ldy PAL_BUF+1+I
-    lda (PAL_BG_PTR),y
-    sta PPU_DATA
-    .endrepeat
-
-    .repeat 3,J
-    stx PPU_DATA            ;background color
-    .repeat 3,I
-    ldy PAL_BUF+5+(J*4)+I
-    lda (PAL_BG_PTR),y
-    sta PPU_DATA
-    .endrepeat
-    .endrepeat
-
-    .repeat 4,J
-    stx PPU_DATA            ;background color
-    .repeat 3,I
-    ldy PAL_BUF+17+(J*4)+I
-    lda (PAL_SPR_PTR),y
-    sta PPU_DATA
-    .endrepeat
-    .endrepeat
-
+;    lda <PAL_UPDATE     ;update palette if needed
+;    bne @updPal
+;    jmp @skipUpd
+;
+;@updPal:
+;
+;    ldx #0
+;    stx <PAL_UPDATE
+;
+;    lda #$3f
+;    sta PPU_ADDR
+;    stx PPU_ADDR
+;
+;    ldy PAL_BUF             ;background color, remember it in X
+;    lda (PAL_BG_PTR),y
+;    sta PPU_DATA
+;    tax
+;
+;    .repeat 3,I
+;    ldy PAL_BUF+1+I
+;    lda (PAL_BG_PTR),y
+;    sta PPU_DATA
+;    .endrepeat
+;
+;    .repeat 3,J
+;    stx PPU_DATA            ;background color
+;    .repeat 3,I
+;    ldy PAL_BUF+5+(J*4)+I
+;    lda (PAL_BG_PTR),y
+;    sta PPU_DATA
+;    .endrepeat
+;    .endrepeat
+;
+;    .repeat 4,J
+;    stx PPU_DATA            ;background color
+;    .repeat 3,I
+;    ldy PAL_BUF+17+(J*4)+I
+;    lda (PAL_SPR_PTR),y
+;    sta PPU_DATA
+;    .endrepeat
+;    .endrepeat
+;
 ;@updVRAM:
 ;
-;   lda <VRAM_UPDATE
-;   beq @skipUpd
-;   lda #0
-;   sta <VRAM_UPDATE
+;    lda <VRAM_UPDATE
+;    beq @skipUpd
+;    lda #0
+;    sta <VRAM_UPDATE
 ;
-;   lda <NAME_UPD_ENABLE
-;   beq @skipUpd
+;    lda <NAME_UPD_ENABLE
+;    beq @skipUpd
 ;
-;   jsr _flush_vram_update_nmi
+;    jsr _flush_vram_update_nmi
 
 @skipUpd:
 

@@ -31,23 +31,20 @@
     .importzp   FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
     .importzp   PPU_CTRL_VAR, PPU_MASK_VAR, VRAM_UPDATE
     .import     PAL_BUF
-    .include    "ppu.s"
+    .include    "ppu.inc"
 
 
 MAX_SCROLL_Y = 240
 
 
-.SEGMENT "RODATA"
+.RODATA
 
 
 bg_palette:
     .BYTE   $02, $12, $22, $32
-    .BYTE   $00, $00, $00, $00
-    .BYTE   $00, $00, $00, $00
-    .BYTE   $00, $00, $00, $00
 
 
-.SEGMENT "CODE"
+.CODE
 
 
 ; Subroutine that fills nametable in PPU VRAM, both tiles and attributes.
@@ -80,18 +77,17 @@ L2: STA PPU_DATA
 
 
 _level_load:
-    ;LDA PPU_STATUS  ; reset address latch
-    ;LDA #$3F
-    ;STA PPU_ADDR
-    ;LDA #$00
-    ;STA PPU_ADDR
-    ;TAX
-    LDX #$00
+    LDA PPU_STATUS  ; reset address latch
+    LDA #$3F
+    STA PPU_ADDR
+    LDA #$00
+    STA PPU_ADDR
+    TAX
 @L01:
     LDA bg_palette,X
-    STA PAL_BUF,X
+    STA PPU_DATA
     INX
-    CPX #$0F
+    CPX #$04
     BNE @L01
 
     LDA <PPU_CTRL_VAR   ; set background tiles bank to 1

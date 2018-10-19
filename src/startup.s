@@ -23,9 +23,9 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
     .export _exit,__STARTUP__:absolute=1
     .exportzp FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
     .exportzp PPU_CTRL_VAR, PPU_MASK_VAR
-    .exportzp PAD_STATE
+    .exportzp PAD_STATE, PAD_BUF
     .exportzp VRAM_UPDATE
-    .export PAL_BUF
+    .export OAM_BUF, PAL_BUF
     .import push0,popa,popax,_main,zerobss,copydata
 
 ; Linker generated symbols
@@ -38,7 +38,7 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
 
     .importzp _PAD_STATE, _PAD_STATET ;added
     .include "zeropage.inc"
-    .include "ppu.s"
+    .include "ppu.inc"
 
 
 CTRL_PORT1  =$4016
@@ -259,7 +259,7 @@ sounds_data:
 
 
 
-.segment "SAMPLES"
+;.segment "SAMPLES"
 ;   .incbin "music_dpcm.bin"
 
 

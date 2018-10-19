@@ -33,8 +33,8 @@
 void main(void)
 {
     ppu_off();
-    level_load();
     player_init();
+    level_load();
     ppu_on_all();
 
     while (1)
