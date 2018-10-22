@@ -35,6 +35,7 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
     .import __CODE_LOAD__   ,__CODE_RUN__   ,__CODE_SIZE__
     .import __RODATA_LOAD__ ,__RODATA_RUN__ ,__RODATA_SIZE__
     .import NES_MAPPER, NES_PRG_BANKS, NES_CHR_BANKS, NES_MIRRORING
+    .import NMI, IRQ
 
     .importzp _PAD_STATE, _PAD_STATET ;added
     .include "zeropage.inc"
@@ -113,7 +114,7 @@ DATA_PTR:           .res 2
 
 .segment "STARTUP"
 
-start:
+RESET:
 _exit:
 
     sei
@@ -266,9 +267,9 @@ sounds_data:
 
 .segment "VECTORS"
 
-    .word nmi   ;$fffa vblank nmi
-    .word start ;$fffc reset
-    .word irq   ;$fffe irq / brk
+    .word NMI   ;$fffa vblank nmi
+    .word RESET ;$fffc reset
+    .word IRQ   ;$fffe irq / brk
 
 
 .segment "CHARS"

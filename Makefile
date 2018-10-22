@@ -55,6 +55,7 @@ LABELS = labels.txt
 
 OBJECTS = $(addprefix $(OBJDIR)/, \
 	main.c.o	\
+	nmi.o		\
 	player.o	\
 	gamepad.o	\
 	level.o		\
