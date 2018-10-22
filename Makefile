@@ -54,10 +54,9 @@ TARGET = yak-fighter.nes
 LABELS = labels.txt
 
 OBJECTS = $(addprefix $(OBJDIR)/, \
-	main.c.o	\
+	main.o		\
 	nmi.o		\
 	player.o	\
-	gamepad.o	\
 	level.o		\
 	startup.o)
 LIBS = nes.lib

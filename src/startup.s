@@ -35,7 +35,7 @@ FT_SFX_ENABLE   = 0     ;undefine to exclude all sound effects code
     .import __CODE_LOAD__   ,__CODE_RUN__   ,__CODE_SIZE__
     .import __RODATA_LOAD__ ,__RODATA_RUN__ ,__RODATA_SIZE__
     .import NES_MAPPER, NES_PRG_BANKS, NES_CHR_BANKS, NES_MIRRORING
-    .import NMI, IRQ
+    .import MAIN, NMI, IRQ
 
     .importzp _PAD_STATE, _PAD_STATET ;added
     .include "zeropage.inc"
@@ -241,7 +241,8 @@ detectNTSC:
     sta PPU_SCROLL
     sta PPU_SCROLL
 
-    jmp _main           ;no parameters
+    ;jmp _main           ;no parameters
+    JMP MAIN
 
     .include "neslib.s"
     .include "famitone2.s"
