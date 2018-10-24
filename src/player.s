@@ -45,10 +45,6 @@ SPRITE_ADDR     =   4
 
 .RODATA
 
-spr_palette:
-    .BYTE   $0F, $0A, $1A, $0D, $0F, $0A, $1A, $02
-    .BYTE   $0F, $15, $25, $35, $0F, $19, $29, $39
-
 spr_tiles:
     .BYTE   $01, $02, $10, $11, $12, $13, $21, $22, $31, $32
 
@@ -76,23 +72,6 @@ reloading:
 .CODE
 
 PLAYER_INIT:
-    LDA PPU_STATUS
-    LDA #$3F
-    STA PPU_ADDR
-    LDA #$10
-    STA PPU_ADDR
-    LDX #$00
-@L0:
-    LDA spr_palette, X
-    STA PPU_DATA
-    INX
-    CPX #$08
-    BNE @L0
-
-    LDA <PPU_CTRL_VAR
-    AND  #%11010111     ; set sprite size to 8x8 and pattern table address to 0
-    STA <PPU_CTRL_VAR
-
     LDA #$90    ; initialize player position to the center of the screen
     STA xpos
     LDA #$88
@@ -137,14 +116,18 @@ PLAYER_UPDATE:
     LDA #GAMEPAD_B
     BIT <PAD_STATE
     BEQ @LDONE
-    LDA xpos
-    ADC #$8
-    TAX
-    LDA ypos
-    SBC #$8
-    TAY
+    LDX xpos        ; fire with two bullets
+    LDY ypos
+    INY
+    INY
+    INY
+    INY
     JSR BULLET_FIRE
-    LDA #$40
+    TXA
+    ADC #$18
+    TAX
+    JSR BULLET_FIRE
+    LDA #$30
     STA reloading
 @LREL:
     DEC reloading

@@ -34,8 +34,8 @@
 
 
 MAX_BULLETS     =   32  ; maximum allowed number of bullets on the screen
-SPRITE_TILE     =   $62
-SPRITE_ATTR     =   $00
+SPRITE_TILE     =   $00
+SPRITE_ATTR     =   $02
 BULLET_OAMADDR  =   $30
 
 .BSS
@@ -63,29 +63,49 @@ BULLET_INIT:
 ;   rX - position X of the bullet sprite
 ;   rY - position Y of the bullet sprite
 BULLET_FIRE:
+    PHA
     TXA
+    PHA
     LDX BULLET_COUNT
-    INX
     CPX #MAX_BULLETS    ; check if we reached maximum number of bullets
     BEQ @LDONE
 
     STA BULLET_X, X
     TYA
+    PHA
     STA BULLET_Y, X
+    INX
     STX BULLET_COUNT
 @LDONE:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
     RTS
 
 
 BULLET_UPDATE:
-    LDX BULLET_COUNT
+    LDA #$FF
+    LDY #BULLET_OAMADDR
+    LDX #MAX_BULLETS
+:   STA OAM_BUF, Y
+    INY
+    INY
+    INY
+    INY
+    DEX
+    BNE :-
+
     LDY BULLET_COUNT
     BEQ @DONE
+    LDX BULLET_COUNT
 @ULOOP:
     LDA BULLET_Y-1, X
     SEC
     SBC #$02
-    BPL @LKEEP
+    CMP #$EE
+    BCC @LKEEP
     DEY
     LDA BULLET_X, Y
     STA BULLET_X-1, X

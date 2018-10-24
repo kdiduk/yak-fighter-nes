@@ -33,11 +33,22 @@
     .IMPORT     PLAYER_INIT, PLAYER_UPDATE, PLAYER_RENDER
     .IMPORT     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
     .IMPORTZP   FRAME_CNT1
-    .IMPORTZP   PPU_MASK_VAR
+    .IMPORTZP   PPU_CTRL_VAR, PPU_MASK_VAR
     .IMPORTZP   PAD_STATE
     .INCLUDE    "bullet.inc"
+    .INCLUDE    "ppu.inc"
 
 GAMEPAD_PORT    =   $4016
+
+
+.RODATA
+
+SPRITE_PALETTE:
+    .BYTE   $0F, $0A, $1A, $0D
+    .BYTE   $0F, $0A, $1A, $02
+    .BYTE   $0F, $17, $27, $37
+    .BYTE   $0F, $19, $29, $39
+
 
 .CODE
 
@@ -45,6 +56,22 @@ MAIN:
     LDA <PPU_MASK_VAR   ; disable background and sprites
     AND #%11100111
     STA <PPU_MASK_VAR
+
+    LDA PPU_STATUS      ; load sprite palette to the PPU
+    LDA #$3F
+    STA PPU_ADDR
+    LDA #$10
+    STA PPU_ADDR
+    LDX #$00
+:   LDA SPRITE_PALETTE, X
+    STA PPU_DATA
+    INX
+    CPX #$10
+    BNE :-
+
+    LDA <PPU_CTRL_VAR
+    AND  #%11010111     ; set sprite size to 8x8 and pattern table address to 0
+    STA <PPU_CTRL_VAR
 
     JSR PLAYER_INIT
     JSR LEVEL_LOAD
