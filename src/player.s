@@ -29,9 +29,10 @@
 ; Created on: 17 October, 2018
 ; Barcelona, Spain
 
-    .EXPORT     _player_init, _player_update, _player_render
+    .EXPORT     PLAYER_INIT, PLAYER_UPDATE, PLAYER_RENDER
     .IMPORTZP   PPU_CTRL_VAR, PAD_STATE
     .IMPORT     OAM_BUF
+    .INCLUDE    "bullet.inc"
     .INCLUDE    "gamepad.inc"
     .INCLUDE    "ppu.inc"
 
@@ -69,10 +70,12 @@ xpos:
 ypos:
     .BYTE $00
 
+reloading:
+    .BYTE $00
 
 .CODE
 
-_player_init:
+PLAYER_INIT:
     LDA PPU_STATUS
     LDA #$3F
     STA PPU_ADDR
@@ -94,9 +97,10 @@ _player_init:
     STA xpos
     LDA #$88
     STA ypos
+    RTS
 
 
-_player_update:
+PLAYER_UPDATE:
     LDA #GAMEPAD_LEFT   ; check if button "left" is pressed
     BIT <PAD_STATE
     BEQ :+
@@ -126,12 +130,29 @@ _player_update:
     CMP #(240-SPRITE_HEIGHT)
     BCS :+
     INC ypos            ; move player to the right
+
 :
+    LDA reloading
+    BNE @LREL
+    LDA #GAMEPAD_B
+    BIT <PAD_STATE
+    BEQ @LDONE
+    LDA xpos
+    ADC #$8
+    TAX
+    LDA ypos
+    SBC #$8
+    TAY
+    JSR BULLET_FIRE
+    LDA #$40
+    STA reloading
+@LREL:
+    DEC reloading
+@LDONE:
     RTS
 
 
-_player_render:
-
+PLAYER_RENDER:
     LDY #SPRITE_ADDR
     LDX #$00
 @LP:

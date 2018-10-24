@@ -54,6 +54,7 @@ TARGET = yak-fighter.nes
 LABELS = labels.txt
 
 OBJECTS = $(addprefix $(OBJDIR)/, \
+	bullet.o	\
 	main.o		\
 	nmi.o		\
 	player.o	\

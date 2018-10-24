@@ -27,7 +27,7 @@
 ; Created on: 15 October, 2018
 ; Barcelona, Spain
 
-    .export     _level_load, _level_update, _level_render
+    .export     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
     .importzp   FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
     .importzp   PPU_CTRL_VAR, PPU_MASK_VAR, VRAM_UPDATE
     .import     PAL_BUF
@@ -76,7 +76,7 @@ L2: STA PPU_DATA
 .ENDPROC
 
 
-_level_load:
+LEVEL_LOAD:
     LDA PPU_STATUS  ; reset address latch
     LDA #$3F
     STA PPU_ADDR
@@ -116,8 +116,7 @@ _level_load:
     RTS
 
 
-_level_update:
-
+LEVEL_UPDATE:
     LDA #%00000001
     BIT <FRAME_CNT1
     BNE @xscroll    ; we move scroll Y when frame counter is even
@@ -139,7 +138,7 @@ _level_update:
     RTS
 
 
-_level_render:
+LEVEL_RENDER:
     RTS
 
 ; end of file

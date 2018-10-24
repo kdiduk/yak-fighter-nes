@@ -1,4 +1,9 @@
-- remove "famitone2.s" and it's usages (no sounds in the future releases)
-- "neslib.s": compile separalely from startup.s, and link (not include)
+Actual:
+- save/restore registers in NMI: stack vs memory, compare speed/size
+- remove "neslib" and "famitone" from the project
 - use 8x16 sprites
 - aircraft propeller animation
+
+Archive:
+- remove "famitone2.s" and it's usages (no sounds in the future releases)
+- "neslib.s": compile separalely from startup.s, and link (not include)
