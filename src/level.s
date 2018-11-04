@@ -41,7 +41,7 @@ MAX_SCROLL_Y = 240
 
 
 bg_palette:
-    .BYTE   $02, $12, $22, $32
+    .BYTE   $11, $22, $32, $32
 
 
 .CODE
@@ -58,6 +58,7 @@ L1: TYA
     ASL
     ASL
     ASL
+    ORA #$06
     STA PPU_DATA
     ORA #$01
     STA PPU_DATA
