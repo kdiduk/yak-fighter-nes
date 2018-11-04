@@ -32,7 +32,7 @@
     .EXPORT     MAIN
     .IMPORT     PLAYER_INIT, PLAYER_UPDATE, PLAYER_RENDER
     .IMPORT     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
-    .IMPORTZP   FRAME_CNT1
+    .IMPORTZP   FRAME_CNT
     .IMPORTZP   PPU_CTRL_VAR, PPU_MASK_VAR
     .IMPORTZP   PAD_STATE
     .INCLUDE    "bullet.inc"
@@ -53,10 +53,6 @@ SPRITE_PALETTE:
 .CODE
 
 MAIN:
-    LDA <PPU_MASK_VAR   ; disable background and sprites
-    AND #%11100111
-    STA <PPU_MASK_VAR
-
     LDA PPU_STATUS      ; load sprite palette to the PPU
     LDA #$3F
     STA PPU_ADDR
@@ -97,8 +93,8 @@ MAIN:
     JSR PLAYER_UPDATE
     JSR BULLET_UPDATE
 
-    LDA <FRAME_CNT1     ; wait for VBLANK
-:   CMP <FRAME_CNT1
+    LDA <FRAME_CNT     ; wait for VBLANK
+:   CMP <FRAME_CNT
     BEQ :-
 
     JSR LEVEL_RENDER

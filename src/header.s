@@ -24,60 +24,20 @@
 ;
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Implementation of NMI handler.
+; iNES header implementation.
 ;
-; Created on: 22 October, 2018
+; Created on: 03 November, 2018
 ; Barcelona, Spain
 
-    .EXPORT     NMI, IRQ
-    .IMPORT     OAM_BUF
-    .IMPORTZP   FRAME_CNT, SCROLL_X, SCROLL_Y, PPU_CTRL_VAR, PPU_MASK_VAR
-    .INCLUDE    "ppu.inc"
+    .IMPORT NES_MAPPER, NES_PRG_BANKS, NES_CHR_BANKS, NES_MIRRORING
 
+.SEGMENT "HEADER"
 
-.CODE
-
-NMI:
-    PHA     ; push registers onto stack
-    TXA
-    PHA
-    TYA
-    PHA
-
-    LDA #%00011000
-    BIT <PPU_MASK_VAR
-    BEQ @LSKIP          ; skip OAM update and scroll if rendering is disabled
-
-    LDA #>OAM_BUF
-    STA PPU_OAM_DMA
-
-    ; TODO: background graphics update should be here
-
-    LDA #0
-    STA PPU_ADDR
-    STA PPU_ADDR
-
-    LDA <SCROLL_X
-    STA PPU_SCROLL
-    LDA <SCROLL_Y
-    STA PPU_SCROLL
-
-    LDA <PPU_CTRL_VAR
-    STA PPU_CTRL
-
-@LSKIP:
-    LDA <PPU_MASK_VAR
-    STA PPU_MASK
-
-    INC <FRAME_CNT
-
-    PLA     ; restore registers values (pull from the stack)
-    TAY
-    PLA
-    TAX
-    PLA
-IRQ:
-    RTI
-
+    .BYTE   $4e, $45, $53, $1a
+    .BYTE   <NES_PRG_BANKS
+    .BYTE   <NES_CHR_BANKS
+    .BYTE   <NES_MIRRORING|(<NES_MAPPER<<4)
+    .BYTE   <NES_MAPPER&$f0
+    .RES    8,0
 
 ; end of file

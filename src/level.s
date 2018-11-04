@@ -28,7 +28,7 @@
 ; Barcelona, Spain
 
     .export     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
-    .importzp   FRAME_CNT1, SCROLL_X, SCROLL_Y, TEMP
+    .importzp   FRAME_CNT, SCROLL_X, SCROLL_Y, TEMP
     .importzp   PPU_CTRL_VAR, PPU_MASK_VAR, VRAM_UPDATE
     .import     PAL_BUF
     .include    "ppu.inc"
@@ -118,7 +118,7 @@ LEVEL_LOAD:
 
 LEVEL_UPDATE:
     LDA #%00000001
-    BIT <FRAME_CNT1
+    BIT <FRAME_CNT
     BNE @xscroll    ; we move scroll Y when frame counter is even
 
     LDX <SCROLL_Y

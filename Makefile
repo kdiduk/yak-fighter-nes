@@ -55,11 +55,12 @@ LABELS = labels.txt
 
 OBJECTS = $(addprefix $(OBJDIR)/, \
 	bullet.o	\
+	header.o	\
 	main.o		\
 	nmi.o		\
 	player.o	\
 	level.o		\
-	startup.o)
+	reset.o)
 LIBS = nes.lib
 
 AS = ca65
