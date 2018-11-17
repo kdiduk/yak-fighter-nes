@@ -27,51 +27,52 @@
 ; Created on: 15 October, 2018
 ; Barcelona, Spain
 
-    .export     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
-    .importzp   FRAME_CNT, SCROLL_X, SCROLL_Y, TEMP
-    .importzp   PPU_CTRL_VAR, PPU_MASK_VAR, VRAM_UPDATE
-    .import     PAL_BUF
-    .include    "ppu.inc"
+    .EXPORT     LEVEL_LOAD, LEVEL_UPDATE, LEVEL_RENDER
+    .IMPORTZP   FRAME_CNT, SCROLL_X, SCROLL_Y, TEMP
+    .IMPORTZP   PPU_CTRL_VAR, PPU_MASK_VAR, VRAM_UPDATE
+    .IMPORT     PAL_BUF
+    .INCLUDE    "ppu.inc"
 
 
-MAX_SCROLL_Y = 240
+MAX_SCROLL_Y    = 240
+LEVEL_WIDTH     = 16
 
 
 .RODATA
 
-
-bg_palette:
+BG_PALETTE:
     .BYTE   $11, $22, $32, $32
 
 
 .CODE
 
-
 ; Subroutine that fills nametable in PPU VRAM, both tiles and attributes.
 ; Caller should set nametable address in PPU before calling this subroutine.
 .PROC   fill_nametable
-    LDY #30         ; number of rows in a nametable
-L0: LDX #16         ; number of tiles in a row
-L1: TYA
+    LDY #30             ; number of rows in a nametable
+@L0:
+    LDX #LEVEL_WIDTH    ; number of tiles in a row
+@L1:
+    TYA
     AND #$01        ; for even rows, tiles are 00 and 01; for odd: 10 and 11
     ASL
     ASL
     ASL
-    ASL
+    ASL             ; now for even rows rA has $10, and for odd it's $00
     ORA #$06
     STA PPU_DATA
     ORA #$01
     STA PPU_DATA
     DEX
-    BNE L1
+    BNE @L1
     DEY
-    BNE L0
+    BNE @L0
 
     LDA #$00
     LDX #64 ; fill attribute table
-L2: STA PPU_DATA
+@L2: STA PPU_DATA
     DEX
-    BNE L2
+    BNE @L2
 
     RTS
 .ENDPROC
@@ -85,7 +86,7 @@ LEVEL_LOAD:
     STA PPU_ADDR
     TAX
 @L01:
-    LDA bg_palette,X
+    LDA BG_PALETTE,X
     STA PPU_DATA
     INX
     CPX #$04
@@ -116,18 +117,24 @@ LEVEL_LOAD:
 
     RTS
 
-
+; Subroutine which is called every frame from the main game loop.
+; It updates the state of the level.
+; On even frames it scrolls the background Y.
+; TODO: On odd frames we load a piece of level (1 metatile) off the screen.
 LEVEL_UPDATE:
-    LDA #%00000001
+    LDA #%00000001  ; check if the current frame is odd or even
     BIT <FRAME_CNT
-    BNE @xscroll    ; we move scroll Y when frame counter is even
+    BEQ @scroll
 
+    NOP
+    JMP @done
+
+@scroll:
     LDX <SCROLL_Y
-    CPX #0
     BNE @ydec
 
     LDX #MAX_SCROLL_Y
-    LDA <PPU_CTRL_VAR
+    LDA <PPU_CTRL_VAR   ; switch base nametable to display
     EOR #$02
     STA <PPU_CTRL_VAR
 
@@ -135,7 +142,7 @@ LEVEL_UPDATE:
     DEX
     STX <SCROLL_Y
 
-@xscroll:
+@done:
     RTS
 
 
