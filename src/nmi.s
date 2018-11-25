@@ -53,7 +53,8 @@ NMI:
 
     ; TODO: background graphics update should be here
 
-    LDA #0
+    LDA PPU_STATUS
+    LDA #$00
     STA PPU_ADDR
     STA PPU_ADDR
 
