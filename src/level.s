@@ -72,6 +72,15 @@ NTAB_PTR:
 .CODE
 
 
+.PROC INIT_LEVEL_PTR
+    LDA #.LOBYTE(LEVEL_MAP)
+    STA LEVEL_PTR
+    LDA #.HIBYTE(LEVEL_MAP)
+    STA LEVEL_PTR+1
+    RTS
+.ENDPROC
+
+
 .PROC SET_METATILE
     LDY COL
     DEY
@@ -84,7 +93,7 @@ NTAB_PTR:
 ; ------------------------------------------------------------------------------
 ; Calculate current address of the bottom left tile in the nametable.
 ; The formula is:
-; ptr = (base << 8) + ((row-1)*2*32 + (col-1)
+; ptr = (base << 8) + ((row-1)*2*32 + (col-1))
 ;
 ; TODO: testing is needed
 ; ------------------------------------------------------------------------------
@@ -115,84 +124,61 @@ NTAB_PTR:
 
 
 .PROC LOAD_METATILE
-    LDA PPU_STATUS
-    LDA NTAB_PTR+1
-    STA PPU_ADDR
-    LDX NTAB_PTR
+    LDY PPU_STATUS
+    LDX NTAB_PTR+1
     STX PPU_ADDR
-
-    LDA METATILE
-    STA PPU_DATA
-
-    CLC
-    ADC #$10
-    STA PPU_DATA
-
-
-    LDA PPU_STATUS
-    LDA NTAB_PTR+1
+    LDA NTAB_PTR
     STA PPU_ADDR
-    LDX NTAB_PTR
+
+    LDY METATILE
+    STY PPU_DATA
+    INY
+    STY PPU_DATA
+
+    LDY PPU_STATUS
+    CLC
+    ADC #$20    ; next row in VRAM
+    BCC :+
     INX
+:
     STX PPU_ADDR
+    STA PPU_ADDR
 
     CLC
     LDA METATILE
-    ADC #$01
+    ADC #$10
     STA PPU_DATA
 
     CLC
-    ADC #$10
+    ADC #$01
     STA PPU_DATA
 
     RTS
 .ENDPROC
 
 ; ------------------------------------------------------------------------------
-; Increase level data pointer by 16, i.e. to the next row.
+; Increase level map pointer by 16, i.e. to the next row.
 ; If the pointer is reached the level data end, it's reset to the beginning.
-;
-;    LEVEL_PTR += 16 (COL_MAX)
-;    IF LEVEL_PTR >= LEVEL_MAP_END:
-;        LEVEL_PTR := LEVEL_MAP
-;    ENDIF
-;
 ; TODO: testing is needed.
 ; ------------------------------------------------------------------------------
 .PROC INC_LEVEL_PTR
-    ; ----------------------------------------------------------------
-    ; Increment 16-bit pointer of the level data by 32
-
-    ; add 16 (COL_MAX) to the low byte of the address
     CLC
     LDA LEVEL_PTR
-    TAX                     ; keep low byte of the ptr in rX
     ADC #COL_MAX
     STA LEVEL_PTR
 
-    ; if carry flag was set, increment high byte
-    LDA LEVEL_PTR+1
-    ADC #$00
-    STA LEVEL_PTR+1
-    ; ----------------------------------------------------------------
+    LDX LEVEL_PTR+1
+    BCC @LCMP           ; if carry flag was set, increment high byte
+    INX
+    STX LEVEL_PTR+1
 
-    ; ----------------------------------------------------------------
-    ; Check if we reached end of the level data.
-    ; If so, set level pointer to the beginning of the level data.
-    ; Now rA contains high byte of the level pointer,
-    ;   and rX contains the low byte of the level pointer.
-
-    CMP #.HIBYTE(LEVEL_MAP_END) ; compare high byte
+    ; Check if we reached the end of the level map.
+@LCMP:
+    CPX #.HIBYTE(LEVEL_MAP_END) ; compare high byte of the address
     BCC @LDONE
-    CPX #.LOBYTE(LEVEL_MAP_END) ; compare low byte
+    CMP #.LOBYTE(LEVEL_MAP_END) ; compare low byte of the address
     BCC @LDONE
-
-    ; set level pointer to the beginning of the level data
-    LDA #.LOBYTE(LEVEL_MAP)
-    STA LEVEL_PTR
-    LDA #.HIBYTE(LEVEL_MAP)
-    STA LEVEL_PTR+1
-    ; ----------------------------------------------------------------
+    JMP INIT_LEVEL_PTR
 @LDONE:
     RTS
 .ENDPROC
@@ -219,38 +205,6 @@ NTAB_PTR:
 .ENDPROC
 
 
-; Subroutine that fills nametable in PPU VRAM, both tiles and attributes.
-; Caller should set nametable address in PPU before calling this subroutine.
-;.PROC   fill_nametable
-;    LDY #30             ; number of rows in a nametable
-;@L0:
-;    LDX #LEVEL_WIDTH    ; number of tiles in a row
-;@L1:
-;    TYA
-;    AND #$01        ; for even rows, tiles are 00 and 01; for odd: 10 and 11
-;    ASL
-;    ASL
-;    ASL
-;    ASL             ; now for even rows rA has $10, and for odd it's $00
-;    ORA #$06
-;    STA PPU_DATA
-;    ORA #$01
-;    STA PPU_DATA
-;    DEX
-;    BNE @L1
-;    DEY
-;    BNE @L0
-;
-;    LDA #$00
-;    LDX #64 ; fill attribute table
-;@L2: STA PPU_DATA
-;    DEX
-;    BNE @L2
-;
-;    RTS
-;.ENDPROC
-
-
 LEVEL_LOAD:
     LDA PPU_STATUS  ; reset address latch
     LDA #$3F
@@ -266,34 +220,18 @@ LEVEL_LOAD:
     BNE @L01
 
     LDA PPU_CTRL_VAR   ; set background tiles bank to 1
-    ORA #%00010100      ; and set VRAM address increment to 32
+    ORA #%00010000
     STA PPU_CTRL_VAR
-    STA PPU_CTRL
 
-    LDA #.LOBYTE(LEVEL_MAP)
-    STA LEVEL_PTR
-    LDA #.HIBYTE(LEVEL_MAP)
-    STA LEVEL_PTR+1
+    JSR INIT_LEVEL_PTR
 
     LDA #$20
     STA BASE
     JSR INIT_NAMETABLE
-    ;LDA PPU_STATUS  ; reset address latch
-    ;LDA #$20
-    ;STA PPU_ADDR
-    ;LDA #$00
-    ;STA PPU_ADDR
-    ;JSR fill_nametable
 
     LDA #$28
     STA BASE
     JSR INIT_NAMETABLE
-    ;LDA PPU_STATUS  ; reset address latch
-    ;LDA #$28
-    ;STA PPU_ADDR
-    ;LDA #$00
-    ;STA PPU_ADDR
-    ;JSR fill_nametable
 
     LDX #0
     LDY #(MAX_SCROLL_Y-1)
